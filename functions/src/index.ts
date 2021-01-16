@@ -48,11 +48,12 @@ function emailParticipantAdded(
   transporter.sendMail({
     to: email,
     subject: `ACTION REQUIRED: You've been added to the Groupifier session '${sessionName}'`,
-    text: `Hi ${recipientName},\n\n${hostName} has invited you to a new Groupifier Session named ${sessionName}.\n
-        To submit your preferences for a group, please sign in with your email (${email}) using the link below ASAP.\n
-        ${url}\n
-        Regards,\n
-        The Groupifier Team`,
+    html:
+      `<div style="color:black;"><p>Hi ${recipientName},<br /></p>
+      <p>${hostName} has invited you to a new Groupifier Session named ${sessionName}.</p>
+      <p>To submit your preferences for a group, please sign in with your email (${email}) using the link below ASAP.</p>
+      <p><a href="${url}">${url}</a></p>
+      <p>Regards,<br>The Groupifier Team</p></div>`
   });
 }
 
