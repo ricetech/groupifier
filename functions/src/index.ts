@@ -286,3 +286,77 @@ export const setParticipantFirebaseUID = functions.https.onRequest(
     response.status(200).end();
   }
 );
+
+export const updateParticipantPreferences = functions.https.onRequest(
+  async (request, response) => {
+    const requestData: api.UpdateParticipantPreferencesRequest = request.body;
+    const callerData = await authUser(request);
+    console.log(requestData.SessionUID);
+    const sessionID = (
+      await db.one({
+        text: 'SELECT id FROM sessions WHERE uid=$1',
+        values: [requestData.SessionUID],
+      })
+    ).id;
+
+    let isInSession = 0;
+
+    console.log(0);
+    try {
+      isInSession = (
+        await db.one({
+          text:
+            'SELECT COUNT(*) as count FROM participantSessions ' +
+            'LEFT JOIN participants ON participants.id=participantSessions.participantID ' +
+            'WHERE participants.firebaseuid=$1 AND sessionID=$2',
+          values: [callerData.uid, sessionID],
+        })
+      ).count;
+      if (isInSession === 0) {
+        throw new Error('You are not in this session.');
+      }
+    } catch (e) {
+      throw new Error('You are not in this session.');
+    }
+
+    await db.tx(async (t) => {
+      console.log(0);
+      const callerID = (
+        await t.one({
+          text: 'SELECT id FROM participants WHERE firebaseuid=$1',
+          values: [callerData.uid],
+        })
+      ).id;
+
+      console.log(0);
+      // Clear any existing preferences
+      await t.none({
+        text: 'DELETE FROM rankings WHERE sourceParticipantID=$1',
+        values: [callerID],
+      });
+
+      console.log(0);
+      for (const participant of requestData.DreamParticipants) {
+        console.log(requestData.DreamParticipants);
+        console.log(participant);
+        await t.none({
+          text:
+            'INSERT INTO rankings (SessionID, SourceParticipantID, TargetParticipantID, Rank) VALUES ($1, $2, $3, 2)',
+          values: [sessionID, callerID, participant],
+        });
+      }
+
+      console.log(0);
+      for (const participant of requestData.NightmareParticipants) {
+        console.log(participant);
+        await t.none({
+          text:
+            'INSERT INTO rankings (SessionID, SourceParticipantID, TargetParticipantID, Rank) VALUES ($1, $2, $3, 0)',
+          values: [sessionID, callerID, participant],
+        });
+      }
+
+      response.status(200).end();
+    });
+  }
+);

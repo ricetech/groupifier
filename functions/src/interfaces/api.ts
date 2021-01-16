@@ -11,3 +11,9 @@ export interface GetSessionRequest {
 export interface GetSessionParticipantRequest {
   SessionUID: string;
 }
+
+export interface UpdateParticipantPreferencesRequest {
+  SessionUID: string;
+  DreamParticipants: number[];
+  NightmareParticipants: number[];
+}

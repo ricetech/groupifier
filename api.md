@@ -62,9 +62,11 @@
   - **Request**:
   - **Response**:
 
-- updatePreferences (POST):
+- updateParticipantPreferences (POST):
   - **Request**:
-    - DreamParticipants: Array of Numbers
-    - NightmareParticipants: Array of Numbers
+    - SessionUID: String
+    - DreamParticipants: Array of Strings***
+    - NightmareParticipants: Array of Strings***
   - **Response**:
   
+***: For updateParticipantPreferences, the strings are a number. The thing is, the number is so big that Javascript rounds it. Just send the number as a string, seems to work fine.
