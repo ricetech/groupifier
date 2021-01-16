@@ -38,7 +38,7 @@ async function authUser(
 
 function emailParticipantAdded(
     email: string, recipientName: string, hostName: string, sessionID: string, sessionName: string
-): boolean {
+): void {
     const url: string = "https://groupifier.space/session?sid=" + sessionID;
     transporter.sendMail({
         to: email,
@@ -51,12 +51,11 @@ function emailParticipantAdded(
         Regards,\n
         The Groupifier Team`
     });
-    return false;
 }
 
 function emailParticipantGrouped(
   email: string, recipientName: string, sessionName: string, members: string[]
-): boolean {
+): void {
   transporter.sendMail({
       to: email,
       subject: `Your group members for '${sessionName}'`,
@@ -67,7 +66,6 @@ function emailParticipantGrouped(
       Regards,\n
       The Groupifier Team`
   });
-  return false;
 }
 
 export const createSession = functions.https.onRequest(
