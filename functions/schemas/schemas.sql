@@ -18,23 +18,32 @@ CREATE TABLE Sessions (
     ID BIGSERIAL,
     UID VARCHAR(128) UNIQUE,
     Name VARCHAR(64),
-    HostID BIGSERIAL,
+    HostID BIGINT,
     Datetime TIMESTAMP NOT NULL DEFAULT NOW(),
+    Status VARCHAR(20),
     PRIMARY KEY (ID),
     FOREIGN KEY (HostID) REFERENCES HOSTS(ID)
 );
 
 CREATE TABLE Groups (
     ID BIGSERIAL,
-    SessionID BIGSERIAL,
+    SessionID BIGINT,
     PRIMARY KEY (ID),
     FOREIGN KEY (SessionID) REFERENCES Sessions(ID)
 );
 
+CREATE TABLE ParticipantSessions (
+    ParticipantID BIGINT,
+    SessionID BIGINT,
+    PRIMARY KEY (ParticipantID, SessionID),
+    FOREIGN KEY (ParticipantID) REFERENCES Participants(ID),
+    FOREIGN KEY (SessionID) REFERENCES Sessions(ID)
+);
+
 CREATE TABLE Rankings (
-    SessionID BIGSERIAL,
-    SourceParticipantID BIGSERIAL,
-    TargetParticipantID BIGSERIAL,
+    SessionID BIGINT,
+    SourceParticipantID BIGINT,
+    TargetParticipantID BIGINT,
     RANK SMALLINT,
     PRIMARY KEY (SessionID, SourceParticipantID, TargetParticipantID),
     FOREIGN KEY (SourceParticipantID) REFERENCES Participants(ID),

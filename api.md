@@ -22,21 +22,22 @@
       - TotalParticipants: Number
       - RespondedParticipants: Number
       - SessionName: String
-      - Datetime: Long (Unix Time)
+      - SessionDatetime: Long (Unix Time)
       - SessionUID: String
-      - Status: String
+      - SessionStatus: String
   
 - solveSession: (POST)
   - **Request**:
     - SessionsUID: String
   - **Response**:
-    - Status: String
+    - SessionStatus: String
   
 - getSession: (GET)
   - **Request**:
     - SessionUID: String
   - **Response**:
-    - Status: String
+    - SessionName: String
+    - SessionStatus: String
     - Participants: List of Objects
       - ParticipantName: String
     - ParticipantGroups: List of Arrays (Can be NULL)
