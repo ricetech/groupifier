@@ -12,9 +12,7 @@ export const GroupPage = () => (
       <Sidebar name='Bob' />
     </Col>
     <Col xs={10}>
-      <TeamCard
-        teamCardOption='Dream Team'
-      />
+      <TeamCard teamCardOption='Dream Team' />
     </Col>
   </Row>
 );
