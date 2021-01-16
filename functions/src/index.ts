@@ -7,6 +7,8 @@ import * as nodemailer from 'nodemailer';
 import {v4 as uuid} from "uuid";
 // eslint-disable-next-line no-unused-vars
 import * as api from "./interfaces/api";
+import {auth} from "firebase-admin/lib/auth";
+import DecodedIdToken = auth.DecodedIdToken;
 
 admin.initializeApp();
 
@@ -21,10 +23,10 @@ const transporter = nodemailer.createTransport(smtpConfig, {
  * Decodes the token sent in the 'Authentication' header. Note that some other checks might need to be done to make
  * sure the user is indeed allowed to access a resource.
  *
- * @param {Request} request - Incoming HTTP request
+ * @param {functions.https.Request} request - Incoming HTTP request
  */
-async function authUser(request: Request): Promise<DecodedIdToken> {
-  const token = request.header("Authentication");
+async function authUser(request: functions.https.Request): Promise<DecodedIdToken> {
+  const token = request.get("Authentication");
   if (token === undefined) {
     throw new Error("Not authenticated!");
   }
