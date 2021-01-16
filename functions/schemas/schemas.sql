@@ -31,6 +31,14 @@ CREATE TABLE Groups (
     FOREIGN KEY (SessionID) REFERENCES Sessions(ID)
 );
 
+CREATE TABLE ParticipantSessions (
+    ParticipantID BIGINT,
+    SessionID BIGINT,
+    PRIMARY KEY (ParticipantID, SessionID),
+    FOREIGN KEY (ParticipantID) REFERENCES Participants(ID),
+    FOREIGN KEY (SessionID) REFERENCES Sessions(ID)
+);
+
 CREATE TABLE Rankings (
     SessionID BIGSERIAL,
     SourceParticipantID BIGSERIAL,

@@ -42,6 +42,24 @@ export const createSession = functions.https.onRequest(
     const callerData = await authUser(request);
 
     await db.tx(async (t) => {
+      // Create the host
+      const hostID = await t
+        .one({
+          text:
+            'INSERT INTO hosts (FirebaseUID, Name, Email) VALUES ($1, $2, $3) ON CONFLICT(email) DO UPDATE SET email=EXCLUDED.email RETURNING id',
+          values: [callerData.uid, requestData.HostName, callerData.email],
+        })
+        .then((data) => data.id);
+
+      const uniqueSessionID = uuid();
+
+      // Create the session
+      const sessionData = await t.one({
+        text:
+          'INSERT INTO sessions (UID, Name, HostID) VALUES ($1, $2, $3) RETURNING extract(epoch from datetime) as Datetime, name, uid, id',
+        values: [uniqueSessionID, requestData.SessionName, hostID],
+      });
+
       // Store the newly created participants
       const participantsData: number[] = [];
 
@@ -61,6 +79,12 @@ export const createSession = functions.https.onRequest(
               ],
             });
 
+            await t.none({
+              text:
+                'INSERT INTO ParticipantSessions (ParticipantID, SessionID) VALUES ($1, $2)',
+              values: [participantData.id, sessionData.id],
+            });
+
             participantsData.push(participantData);
           })(p)
         );
@@ -68,24 +92,6 @@ export const createSession = functions.https.onRequest(
 
       // Wait for all participants to be added
       await Promise.all(participantsPromises);
-
-      // Create the host
-      const hostID = await t
-        .one({
-          text:
-            'INSERT INTO hosts (FirebaseUID, Name, Email) VALUES ($1, $2, $3) ON CONFLICT(email) DO UPDATE SET email=EXCLUDED.email RETURNING id',
-          values: [callerData.uid, requestData.HostName, callerData.email],
-        })
-        .then((data) => data.id);
-
-      const uniqueSessionID = uuid();
-
-      // Finally create the session
-      const sessionData = await t.one({
-        text:
-          'INSERT INTO sessions (UID, Name, HostID) VALUES ($1, $2, $3) RETURNING extract(epoch from datetime) as Datetime, name, uid',
-        values: [uniqueSessionID, requestData.SessionName, hostID],
-      });
 
       response
         .status(200)
