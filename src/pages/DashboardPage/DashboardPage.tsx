@@ -2,22 +2,38 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useRouteMatch,
+  useParams,
+} from 'react-router-dom';
 
 import { Sidebar } from '../../components/Sidebar/Sidebar';
-import { SessionCard } from '../../components/SessionCard/SessionCard';
+import { CurrentSessionsPage } from './CurrentSessionsPage/CurrentSessionsPage';
+import { CreateSessionPage } from './CreateSessionPage/CreateSessionPage';
 
-export const DashboardPage = () => (
-  <Row className='full-row'>
-    <Col xs={2}>
-      <Sidebar name='Bob' />
-    </Col>
-    <Col xs={10}>
-      <SessionCard
-        sessionName='Bob'
-        sessionDate='Jan 9th'
-        currentParticipants={4}
-        totalParticipants={5}
-      />
-    </Col>
-  </Row>
-);
+export const DashboardPage = () => {
+  const match = useRouteMatch();
+  return (
+    <Row className='full-row'>
+      <Col xs={2}>
+        <Sidebar name='Bob' />
+      </Col>
+      <Col xs={10}>
+        <Router>
+          <Switch>
+            <Route path={`${match.path}/create`}>
+              <CreateSessionPage />
+            </Route>
+            <Route path={`${match.path}/`}>
+              <CurrentSessionsPage />
+            </Route>
+          </Switch>
+        </Router>
+      </Col>
+    </Row>
+  );
+};
