@@ -104,3 +104,40 @@ export const createSession = functions.https.onRequest(
     });
   }
 );
+
+export const getAllSessions = functions.https.onRequest(
+  async (request, response) => {
+    const callerData = await authUser(request);
+
+    const responseData = [];
+    console.log(1);
+    const sessionData = await db.any({
+      text:
+        'SELECT sessions.*, extract(epoch from datetime) as Datetime FROM sessions LEFT JOIN Hosts host ON sessions.hostid=host.id WHERE host.firebaseUID=$1',
+      values: [callerData.uid],
+    });
+
+    console.log(1);
+    for (const session of sessionData) {
+      console.log(session);
+      const totalParticipants = (
+        await db.one({
+          text:
+            'SELECT COUNT(*) as count FROM participantSessions WHERE SessionID=$1',
+          values: [session.id],
+        })
+      ).count;
+
+      responseData.push({
+        TotalParticipants: totalParticipants,
+        RespondedParticipants: 0, // TODO: Implement this
+        SessionName: session.name,
+        DateTime: session.datetime,
+        SessionUID: session.uid,
+        Status: session.status, // TODO: Implement status
+      });
+    }
+
+    response.status(200).json(responseData).end();
+  }
+);
