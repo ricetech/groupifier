@@ -1,5 +1,5 @@
 - All data is transmitted in JSON for responses and POSTS. GET uses URL parameters.
-- All requests should be authenticated using a Firebase token. The token should be added in the "Authentication" header of requests.
+- All requests should be authenticated using a Firebase token. The token should be added in the "Authorization" header of requests.
 
 ## Session Endpoint (for the host)
 

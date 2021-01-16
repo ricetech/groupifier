@@ -20,13 +20,13 @@ const transporter = nodemailer.createTransport(smtpConfig, {
 });
 
 /**
- * Decodes the token sent in the 'Authentication' header. Note that some other checks might need to be done to make
+ * Decodes the token sent in the 'Authorization' header. Note that some other checks might need to be done to make
  * sure the user is indeed allowed to access a resource.
  *
  * @param {functions.https.Request} request - Incoming HTTP request
  */
 async function authUser(request: functions.https.Request): Promise<DecodedIdToken> {
-  const token = request.get("Authentication");
+  const token = request.get("Authorization");
   if (token === undefined) {
     throw new Error("Not authenticated!");
   }
