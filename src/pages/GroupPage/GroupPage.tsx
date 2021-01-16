@@ -2,9 +2,12 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { Participant } from '../../interfaces';
 
 import { Sidebar } from '../../components/Sidebar/Sidebar';
 import { TeamCard } from '../../components/TeamCard/TeamCard';
+
+const dummydata: Participant[] = [{ value: 'Bob@email.com', label: 'Bob' }];
 
 export const GroupPage = () => (
   <Row className='full-row'>
@@ -12,9 +15,7 @@ export const GroupPage = () => (
       <Sidebar name='Bob' />
     </Col>
     <Col xs={10}>
-      <TeamCard
-        teamCardOption='Dream Team'
-      />
+      <TeamCard teamCardOption='Dream Team' data={dummydata} />
     </Col>
   </Row>
 );
