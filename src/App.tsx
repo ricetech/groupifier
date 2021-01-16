@@ -6,7 +6,6 @@ import { HomePage } from './pages/HomePage/HomePage';
 import { DashboardPage } from './pages/DashboardPage/DashboardPage';
 import { GroupPage } from './pages/GroupPage/GroupPage';
 
-
 import {
   BrowserRouter as Router,
   Switch,
