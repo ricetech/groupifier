@@ -9,6 +9,7 @@ import { v4 as uuid } from 'uuid';
 import * as api from './interfaces/api';
 // eslint-disable-next-line no-unused-vars
 import { auth } from 'firebase-admin/lib/auth';
+import { GetSessionRequest } from './interfaces/api';
 
 admin.initializeApp();
 
@@ -78,7 +79,7 @@ export const createSession = functions.https.onRequest(
       const hostID = await t
         .one({
           text:
-            'INSERT INTO hosts (FirebaseUID, Name, Email) VALUES ($1, $2, $3) ON CONFLICT(email) DO UPDATE SET email=EXCLUDED.email RETURNING id',
+            'INSERT INTO hosts (FirebaseUID, Name, Email) VALUES ($1, $2, $3) ON CONFLICT(email) DO UPDATE SET email=$3, firebaseUID=$1 RETURNING id',
           values: [callerData.uid, requestData.HostName, callerData.email],
         })
         .then((data) => data.id);
@@ -149,9 +150,7 @@ export const getAllSessions = functions.https.onRequest(
       values: [callerData.uid],
     });
 
-    console.log(1);
     for (const session of sessionData) {
-      console.log(session);
       const totalParticipants = (
         await db.one({
           text:
@@ -171,5 +170,60 @@ export const getAllSessions = functions.https.onRequest(
     }
 
     response.status(200).json(responseData).end();
+  }
+);
+
+export const solveSession = functions.https.onRequest(
+  async (request, response) => {}
+);
+
+export const getSession = functions.https.onRequest(
+  async (request, response) => {
+    const requestData: GetSessionRequest = <GetSessionRequest>(
+      (<unknown>request.query)
+    );
+    const callerData = await authUser(request);
+
+    const sessionData = await db.one({
+      text:
+        'SELECT sessions.*, extract(epoch from datetime) as Datetime, hosts.firebaseuid as hostuid ' +
+        'FROM sessions LEFT JOIN hosts ON sessions.hostid=hosts.id WHERE sessions.uid=$1',
+      values: [requestData.SessionUID],
+    });
+    console.log(sessionData.hostuid);
+    console.log(callerData.uid);
+
+    if (sessionData.hostuid !== callerData.uid) {
+      throw new Error('You are not authorized to access this resource!');
+    }
+
+    const totalParticipants = (
+      await db.one({
+        text:
+          'SELECT COUNT(*) as count FROM participantSessions WHERE SessionID=$1',
+        values: [sessionData.id],
+      })
+    ).count;
+
+    const participantsList = await db.any({
+      text:
+        'SELECT participants.name as ParticipantName FROM participantSessions ' +
+        'LEFT JOIN participants ON participantSessions.participantID=participants.id WHERE participantSessions.sessionID=$1',
+      values: [sessionData.id],
+    });
+
+    response
+      .status(200)
+      .json({
+        TotalParticipants: totalParticipants,
+        RespondedParticipants: 0, // TODO: Implement this
+        SessionName: sessionData.name,
+        SessionDatetime: sessionData.datetime,
+        SessionUID: sessionData.uid,
+        SessionStatus: sessionData.status, // TODO: Implement status
+        Participants: participantsList,
+        ParticipantsGroups: null, // TODO: Implement this
+      })
+      .end();
   }
 );

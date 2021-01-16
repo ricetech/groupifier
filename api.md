@@ -36,7 +36,11 @@
   - **Request**:
     - SessionUID: String
   - **Response**:
+    - TotalParticipants: Number
+    - RespondedParticipants: Number
     - SessionName: String
+    - SessionDatetime: Long (Unix Time)
+    - SessionUID: String
     - SessionStatus: String
     - Participants: List of Objects
       - ParticipantName: String
