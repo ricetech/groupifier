@@ -9,7 +9,10 @@ import { v4 as uuid } from 'uuid';
 import * as api from './interfaces/api';
 // eslint-disable-next-line no-unused-vars
 import { auth } from 'firebase-admin/lib/auth';
-import { GetSessionRequest } from './interfaces/api';
+import {
+  GetSessionParticipantRequest,
+  GetSessionRequest,
+} from './interfaces/api';
 
 admin.initializeApp();
 
@@ -243,5 +246,29 @@ export const getSession = functions.https.onRequest(
         ParticipantsGroups: null, // TODO: Implement this
       })
       .end();
+  }
+);
+
+export const getSessionParticipants = functions.https.onRequest(
+  async (request, response) => {
+    const requestData: GetSessionParticipantRequest = <GetSessionRequest>(
+      (<unknown>request.query)
+    );
+    const callerData = await authUser(request);
+
+    const sessionParticipants = (
+      await db.any({
+        text:
+          'SELECT participants.id as id, participants.name as name FROM participantSessions ' +
+          'LEFT JOIN participants ON participants.id=participantSessions.participantID ' +
+          'LEFT JOIN sessions ON sessions.id=participantSessions.sessionID ' +
+          'WHERE sessions.uid=$1',
+        values: [requestData.SessionUID],
+      })
+    ).map((value) => {
+      return { ParticipantName: value.name, ParticipantID: value.id };
+    });
+
+    response.status(200).json({ Participants: sessionParticipants }).end();
   }
 );

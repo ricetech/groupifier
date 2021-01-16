@@ -7,3 +7,7 @@ export interface CreateSessionRequest {
 export interface GetSessionRequest {
   SessionUID: string;
 }
+
+export interface GetSessionParticipantRequest {
+  SessionUID: string;
+}
