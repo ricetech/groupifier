@@ -38,34 +38,41 @@ async function authUser(
 }
 
 function emailParticipantAdded(
-    email: string, recipientName: string, hostName: string, sessionID: string, sessionName: string
+  email: string,
+  recipientName: string,
+  hostName: string,
+  sessionID: string,
+  sessionName: string
 ): void {
-    const url: string = "https://groupifier.space/session?sid=" + sessionID;
-    transporter.sendMail({
-        to: email,
-        subject: `ACTION REQUIRED: You've been added to the Groupifier session '${sessionName}'`,
-        text: `Hi ${recipientName},\n\n${hostName} has invited you 
+  const url: string = 'https://groupifier.space/session?sid=' + sessionID;
+  transporter.sendMail({
+    to: email,
+    subject: `ACTION REQUIRED: You've been added to the Groupifier session '${sessionName}'`,
+    text: `Hi ${recipientName},\n\n${hostName} has invited you 
         to a new Groupifier Session named ${sessionName}.\n
         To submit your preferences for a group, please sign in with
         your email (${email}) using the link below ASAP.\n
         ${url}\n
         Regards,\n
-        The Groupifier Team`
-    });
+        The Groupifier Team`,
+  });
 }
 
 function emailParticipantGrouped(
-  email: string, recipientName: string, sessionName: string, members: string[]
+  email: string,
+  recipientName: string,
+  sessionName: string,
+  members: string[]
 ): void {
   transporter.sendMail({
-      to: email,
-      subject: `Your group members for '${sessionName}'`,
-      text: `Hi ${recipientName},\n\nYour group members for 
+    to: email,
+    subject: `Your group members for '${sessionName}'`,
+    text: `Hi ${recipientName},\n\nYour group members for 
       the Groupifier Session named ${sessionName} have been
       decided. They are:\n
       ${members.join('\n')}\n
       Regards,\n
-      The Groupifier Team`
+      The Groupifier Team`,
   });
 }
 
