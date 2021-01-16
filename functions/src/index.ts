@@ -2,8 +2,9 @@ import * as functions from "firebase-functions";
 
 import * as admin from "firebase-admin";
 import * as pg from "pg-promise";
+import { config, smtpConfig } from "./databasesecret";
+import * as nodemailer from 'nodemailer';
 import {v4 as uuid} from "uuid";
-import {config} from "./databasesecret";
 // eslint-disable-next-line no-unused-vars
 import * as api from "./interfaces/api";
 
@@ -11,6 +12,10 @@ admin.initializeApp();
 
 // eslint-disable-next-line no-unused-vars
 const db = pg()(config);
+
+const transporter = nodemailer.createTransport(smtpConfig, {
+  from: "no-reply@groupifier.space"
+});
 
 export const createSession = functions.https.onRequest(async (request, response) => {
   const requestData: api.CreateSessionRequest = request.body;
