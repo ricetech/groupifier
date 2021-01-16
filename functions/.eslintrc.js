@@ -19,10 +19,12 @@ module.exports = {
   },
   ignorePatterns: [
     '/lib/**/*', // Ignore built files.
+    'utils/**/*',
   ],
   plugins: ['@typescript-eslint', 'import'],
   rules: {
     'max-len': 'off',
     'require-jsdoc': 'off',
+    'no-unused-vars': 'off',
   },
 };
