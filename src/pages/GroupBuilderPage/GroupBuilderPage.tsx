@@ -9,7 +9,7 @@ import { TeamCard } from '../../components/TeamCard/TeamCard';
 
 const dummydata: Participant[] = [{ value: 'Bob@email.com', label: 'Bob' }];
 
-export const GroupPage = () => (
+export const GroupBuilderPage = () => (
   <Row className='full-row'>
     <Col xs={2}>
       <Sidebar name='Bob' />

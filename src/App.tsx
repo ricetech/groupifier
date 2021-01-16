@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 import { HomePage } from './pages/HomePage/HomePage';
 import { DashboardPage } from './pages/DashboardPage/DashboardPage';
-import { GroupPage } from './pages/GroupPage/GroupPage';
+import { GroupBuilderPage } from './pages/GroupBuilderPage/GroupBuilderPage';
 
 function App() {
   return (
@@ -16,8 +16,8 @@ function App() {
           <Route path='/dashboard'>
             <DashboardPage />
           </Route>
-          <Route path='/group'>
-            <GroupPage />
+          <Route path='/group-builder'>
+            <GroupBuilderPage />
           </Route>
           <Route path='/'>
             <HomePage />
