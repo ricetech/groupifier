@@ -1,14 +1,14 @@
 CREATE TABLE Hosts (
     ID BIGSERIAL,
-    FirebaseUID VARCHAR(128),
+    FirebaseUID VARCHAR(128) UNIQUE,
     Name VARCHAR(64),
-    Email VARCHAR(64),
+    Email VARCHAR(64) UNIQUE,
     PRIMARY KEY (ID)
 );
 
 CREATE TABLE Participants (
     ID BIGSERIAL,
-    FirebaseUID VARCHAR(128),
+    FirebaseUID VARCHAR(128) UNIQUE,
     Name VARCHAR(64),
     Email VARCHAR(64) UNIQUE,
     PRIMARY KEY (ID)
