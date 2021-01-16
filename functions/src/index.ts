@@ -46,7 +46,7 @@ export const createSession = functions.https.onRequest(
       const hostID = await t
         .one({
           text:
-            'INSERT INTO hosts (FirebaseUID, Name, Email) VALUES ($1, $2, $3) ON CONFLICT(email) DO UPDATE SET email=EXCLUDED.email RETURNING id',
+            'INSERT INTO hosts (FirebaseUID, Name, Email) VALUES ($1, $2, $3) ON CONFLICT(email) DO UPDATE SET email=$3, firebaseUID=$1 RETURNING id',
           values: [callerData.uid, requestData.HostName, callerData.email],
         })
         .then((data) => data.id);
