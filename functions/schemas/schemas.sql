@@ -1,5 +1,5 @@
-CREATE TABLE HOST (
-    ID BIGINT,
+CREATE TABLE Hosts (
+    ID BIGSERIAL,
     FirebaseUID VARCHAR(128),
     Name VARCHAR(64),
     Email VARCHAR(64),
@@ -7,33 +7,34 @@ CREATE TABLE HOST (
 );
 
 CREATE TABLE Participants (
-    ID BIGINT,
+    ID BIGSERIAL,
     FirebaseUID VARCHAR(128),
     Name VARCHAR(64),
     Email VARCHAR(64),
     PRIMARY KEY (ID)
 );
 
-CREATE TABLE Session (
-    ID BIGINT,
+CREATE TABLE Sessions (
+    ID BIGSERIAL,
     UID VARCHAR(128) UNIQUE,
     Name VARCHAR(64),
-    HostID BIGINT,
+    HostID BIGSERIAL,
+    Datetime TIMESTAMP NOT NULL DEFAULT NOW(),
     PRIMARY KEY (ID),
-    FOREIGN KEY (HostID) REFERENCES HOST(ID)
+    FOREIGN KEY (HostID) REFERENCES HOSTS(ID)
 );
 
 CREATE TABLE Groups (
-    ID BIGINT,
-    SessionID BIGINT,
+    ID BIGSERIAL,
+    SessionID BIGSERIAL,
     PRIMARY KEY (ID),
-    FOREIGN KEY (SessionID) REFERENCES Session(ID)
+    FOREIGN KEY (SessionID) REFERENCES Sessions(ID)
 );
 
 CREATE TABLE Rankings (
-    SessionID BIGINT,
-    SourceParticipantID BIGINT,
-    TargetParticipantID BIGINT,
+    SessionID BIGSERIAL,
+    SourceParticipantID BIGSERIAL,
+    TargetParticipantID BIGSERIAL,
     RANK SMALLINT,
     PRIMARY KEY (SessionID, SourceParticipantID, TargetParticipantID),
     FOREIGN KEY (SourceParticipantID) REFERENCES Participants(ID),
