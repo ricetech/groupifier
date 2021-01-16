@@ -4,9 +4,14 @@ import * as admin from "firebase-admin";
 admin.initializeApp();
 
 import * as pg from "pg-promise";
-import {config} from "./databasesecret";
+import { config, smtpConfig } from "./databasesecret";
+import * as nodemailer from 'nodemailer';
 
 const db = pg()(config);
+
+const transporter = nodemailer.createTransport(smtpConfig, {
+  from: "no-reply@groupifier.space"
+});
 
 // eslint-disable-next-line require-jsdoc
 async function test() {
