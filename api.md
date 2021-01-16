@@ -57,6 +57,10 @@
     - Participants: Array of Objects
       - ParticipantName: String
       - ParticipantID: Number
+  
+- setParticipantFirebaseUID: (POST) (The Authorization header contains enough information to do everything)
+  - **Request**:
+  - **Response**:
 
 - updatePreferences (POST):
   - **Request**:

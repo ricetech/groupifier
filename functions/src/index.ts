@@ -60,6 +60,7 @@ function emailParticipantAdded(
   });
 }
 
+// @ts-ignore
 function emailParticipantGrouped(
   email: string,
   recipientName: string,
@@ -254,7 +255,7 @@ export const getSessionParticipants = functions.https.onRequest(
     const requestData: GetSessionParticipantRequest = <GetSessionRequest>(
       (<unknown>request.query)
     );
-    const callerData = await authUser(request);
+    await authUser(request);
 
     const sessionParticipants = (
       await db.any({
@@ -270,5 +271,18 @@ export const getSessionParticipants = functions.https.onRequest(
     });
 
     response.status(200).json({ Participants: sessionParticipants }).end();
+  }
+);
+
+export const setParticipantFirebaseUID = functions.https.onRequest(
+  async (request, response) => {
+    const callerData = await authUser(request);
+
+    await db.none({
+      text: 'UPDATE participants SET firebaseuid=$1 WHERE email=$2',
+      values: [callerData.uid, callerData.email],
+    });
+
+    response.status(200).end();
   }
 );
