@@ -10,7 +10,7 @@ CREATE TABLE Participants (
     ID BIGSERIAL,
     FirebaseUID VARCHAR(128),
     Name VARCHAR(64),
-    Email VARCHAR(64),
+    Email VARCHAR(64) UNIQUE,
     PRIMARY KEY (ID)
 );
 

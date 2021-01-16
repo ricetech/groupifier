@@ -1,13 +1,13 @@
 import * as functions from "firebase-functions";
 
 import * as admin from "firebase-admin";
-admin.initializeApp();
-
 import * as pg from "pg-promise";
 import {v4 as uuid} from "uuid";
 import {config} from "./databasesecret";
 // eslint-disable-next-line no-unused-vars
 import * as api from "./interfaces/api";
+
+admin.initializeApp();
 
 // eslint-disable-next-line no-unused-vars
 const db = pg()(config);
@@ -17,21 +17,21 @@ export const createSession = functions.https.onRequest(async (request, response)
 
   await db.tx(async (t) => {
     // Store the newly created participants
-    const participantsIDs: number[] = [];
+    const participantsData: number[] = [];
 
     // Variable to hold pending promises. This way, we can add the participants more quickly.
     const participantsPromises = [];
 
     // Create all the participants in the database
-    for (const participant of requestData.Participants) {
-      participantsPromises.push(async () => {
-        const participantID = await t.one({
-          text: "INSERT INTO participants (Name, Email) VALUES ($1, $2) RETURNING id",
+    for (const p of requestData.Participants) {
+      participantsPromises.push((async (participant) => {
+        const participantData = await t.one({
+          text: "INSERT INTO participants (Name, Email) VALUES ($1, $2) ON CONFLICT(email) DO UPDATE SET email=EXCLUDED.email RETURNING id",
           values: [participant.ParticipantName, participant.ParticipantEmail],
-        }).then((data) => data.id);
+        });
 
-        participantsIDs.push(participantID);
-      });
+        participantsData.push(participantData);
+      })(p));
     }
 
     // Wait for all participants to be added
@@ -56,7 +56,8 @@ export const createSession = functions.https.onRequest(async (request, response)
         .json({
           Datetime: sessionData.datetime,
           SessionName: sessionData.name,
-          SessionUID: sessionData.uid})
+          SessionUID: sessionData.uid,
+        })
         .end();
   });
 });
