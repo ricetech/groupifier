@@ -96,7 +96,7 @@ export const createSession = functions.https.onRequest(
       response
         .status(200)
         .json({
-          Datetime: sessionData.datetime,
+          SessionDatetime: sessionData.datetime,
           SessionName: sessionData.name,
           SessionUID: sessionData.uid,
         })
@@ -132,9 +132,9 @@ export const getAllSessions = functions.https.onRequest(
         TotalParticipants: totalParticipants,
         RespondedParticipants: 0, // TODO: Implement this
         SessionName: session.name,
-        DateTime: session.datetime,
+        SessionDatetime: session.datetime,
         SessionUID: session.uid,
-        Status: session.status, // TODO: Implement status
+        SessionStatus: session.status, // TODO: Implement status
       });
     }
 
