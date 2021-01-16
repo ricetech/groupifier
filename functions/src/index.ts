@@ -7,8 +7,8 @@ import * as nodemailer from 'nodemailer';
 import { v4 as uuid } from 'uuid';
 // eslint-disable-next-line no-unused-vars
 import * as api from './interfaces/api';
+// eslint-disable-next-line no-unused-vars
 import { auth } from 'firebase-admin/lib/auth';
-import DecodedIdToken = auth.DecodedIdToken;
 
 admin.initializeApp();
 
@@ -27,7 +27,7 @@ const transporter = nodemailer.createTransport(smtpConfig, {
  */
 async function authUser(
   request: functions.https.Request
-): Promise<DecodedIdToken> {
+): Promise<auth.DecodedIdToken> {
   const token = request.get('Authorization');
   if (token === undefined) {
     throw new Error('Not authenticated!');
