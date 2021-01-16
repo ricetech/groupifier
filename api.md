@@ -12,7 +12,7 @@
         - ParticipantName: String
         - ParticipantEmail: String
   - **Response**:
-    - Date: String
+    - Datetime: Long (Unix Time)
     - SessionName: String
     - SessionUID: String
     
@@ -23,7 +23,7 @@
       - TotalParticipants: Number
       - RespondedParticipants: Number
       - SessionName: String
-      - DateTime: Long (Unix Time)
+      - Datetime: Long (Unix Time)
       - SessionUID: String
       - Status: String
   
