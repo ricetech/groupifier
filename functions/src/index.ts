@@ -36,6 +36,24 @@ async function authUser(
   return await admin.auth().verifyIdToken(token);
 }
 
+function emailParticipantAdded(
+    email: string, recipientName: string, hostName: string, sessionID: string, sessionName: string
+): boolean {
+    const url: string = "https://groupifier.space/session?sid=" + sessionID;
+    transporter.sendMail({
+        to: email,
+        subject: `ACTION REQUIRED: You've been added to the Groupifier session '${sessionName}'`,
+        text: `Hi ${recipientName},\n\n${hostName} has invited you 
+        to a new Groupifier Session named ${sessionName}.\n
+        To submit your preferences for a group, please sign in with
+        your email (${email}) using the link below ASAP.\n\n
+        ${url}\n\n
+        Regards,\n
+        The Groupifier Team`
+    });
+    return false;
+}
+
 export const createSession = functions.https.onRequest(
   async (request, response) => {
     const requestData: api.CreateSessionRequest = request.body;
