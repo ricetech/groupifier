@@ -17,6 +17,21 @@ const transporter = nodemailer.createTransport(smtpConfig, {
   from: "no-reply@groupifier.space"
 });
 
+/**
+ * Decodes the token sent in the 'Authentication' header. Note that some other checks might need to be done to make
+ * sure the user is indeed allowed to access a resource.
+ *
+ * @param {Request} request - Incoming HTTP request
+ */
+async function authUser(request: Request): Promise<DecodedIdToken> {
+  const token = request.header("Authentication");
+  if (token === undefined) {
+    throw new Error("Not authenticated!");
+  }
+
+  return await admin.auth().verifyIdToken(token);
+}
+
 export const createSession = functions.https.onRequest(async (request, response) => {
   const requestData: api.CreateSessionRequest = request.body;
 
