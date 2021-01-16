@@ -47,8 +47,8 @@ function emailParticipantAdded(
         text: `Hi ${recipientName},\n\n${hostName} has invited you 
         to a new Groupifier Session named ${sessionName}.\n
         To submit your preferences for a group, please sign in with
-        your email (${email}) using the link below ASAP.\n\n
-        ${url}\n\n
+        your email (${email}) using the link below ASAP.\n
+        ${url}\n
         Regards,\n
         The Groupifier Team`
     });
@@ -62,8 +62,8 @@ function emailParticipantGrouped(
       subject: `Your group members for '${sessionName}'`,
       text: `Hi ${recipientName},\n\nYour group members for 
       the Groupifier Session named ${sessionName} have been
-      decided. They are:\n\n
-      ${members.join('\n')}\n\n
+      decided. They are:\n
+      ${members.join('\n')}\n
       Regards,\n
       The Groupifier Team`
   });
