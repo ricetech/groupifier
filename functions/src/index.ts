@@ -36,6 +36,7 @@ async function authUser(request: functions.https.Request): Promise<DecodedIdToke
 
 export const createSession = functions.https.onRequest(async (request, response) => {
   const requestData: api.CreateSessionRequest = request.body;
+  const callerData = await authUser(request);
 
   await db.tx(async (t) => {
     // Store the newly created participants
@@ -61,8 +62,8 @@ export const createSession = functions.https.onRequest(async (request, response)
 
     // Create the host
     const hostID = await t.one({
-      text: "INSERT INTO hosts (Name, Email) VALUES ($1, $2) RETURNING id",
-      values: [requestData.HostName, requestData.HostEmail],
+      text: "INSERT INTO hosts (FirebaseUID, Name, Email) VALUES ($1, $2, $3) ON CONFLICT(email) DO UPDATE SET email=EXCLUDED.email RETURNING id",
+      values: [callerData.uid, requestData.HostName, callerData.email],
     }).then((data) => data.id);
 
     const uniqueSessionID = uuid();
