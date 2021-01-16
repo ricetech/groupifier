@@ -1,5 +1,9 @@
 export interface CreateSessionRequest {
-    HostName: string,
-    SessionName: string,
-    Participants: Array<{ParticipantName: string, ParticipantEmail: string}>
+  HostName: string;
+  SessionName: string;
+  Participants: Array<{ ParticipantName: string; ParticipantEmail: string }>;
+}
+
+export interface GetSessionRequest {
+  SessionUID: string;
 }
