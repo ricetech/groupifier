@@ -8,7 +8,7 @@
     - HostName: String
     - HostEmail: String
     - SessionName: String
-    - List of Objects:
+    - Participants: List of Objects
         - ParticipantName: String
         - ParticipantEmail: String
   - **Response**:
@@ -38,9 +38,9 @@
     - SessionUID: String
   - **Response**:
     - Status: String
-    - List of Objects:
+    - Participants: List of Objects
       - ParticipantName: String
-    - List of Arrays: (Can be NULL)
+    - ParticipantGroups: List of Arrays (Can be NULL)
       - List of Objects:
         - ParticipantName: String
   
@@ -50,13 +50,13 @@
   - **Request**:
     - SessionUID: String
   - **Response**:
-    - Array of Objects:
+    - Participants: Array of Objects
       - ParticipantName: String
       - ParticipantID: Number
 
 - updatePreferences (POST):
   - **Request**:
-    - dreamParticipants: Array of Numbers
-    - nightmareParticipants: Array of Numbers
+    - DreamParticipants: Array of Numbers
+    - NightmareParticipants: Array of Numbers
   - **Response**:
   
