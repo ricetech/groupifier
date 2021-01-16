@@ -19,15 +19,23 @@ export const createSession = functions.https.onRequest(async (request, response)
     // Store the newly created participants
     const participantsIDs: number[] = [];
 
+    // Variable to hold pending promises. This way, we can add the participants more quickly.
+    const participantsPromises = [];
+
     // Create all the participants in the database
     for (const participant of requestData.Participants) {
-      const participantID = await t.one({
-        text: "INSERT INTO participants (Name, Email) VALUES ($1, $2) RETURNING id",
-        values: [participant.ParticipantName, participant.ParticipantEmail],
-      }).then((data) => data.id);
+      participantsPromises.push(async () => {
+        const participantID = await t.one({
+          text: "INSERT INTO participants (Name, Email) VALUES ($1, $2) RETURNING id",
+          values: [participant.ParticipantName, participant.ParticipantEmail],
+        }).then((data) => data.id);
 
-      participantsIDs.push(participantID);
+        participantsIDs.push(participantID);
+      });
     }
+
+    // Wait for all participants to be added
+    await Promise.all(participantsPromises);
 
     // Create the host
     const hostID = await t.one({
