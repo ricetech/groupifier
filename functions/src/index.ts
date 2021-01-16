@@ -16,7 +16,7 @@ admin.initializeApp();
 const db = pg()(config);
 
 const transporter = nodemailer.createTransport(smtpConfig, {
-  from: 'no-reply@groupifier.space',
+  from: 'Groupifier <no-reply@groupifier.space>',
 });
 
 /**
