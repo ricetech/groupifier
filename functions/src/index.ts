@@ -219,11 +219,15 @@ export const getSession = functions.https.onRequest(
       })
     ).count;
 
-    const participantsList = await db.any({
-      text:
-        'SELECT participants.name as ParticipantName FROM participantSessions ' +
-        'LEFT JOIN participants ON participantSessions.participantID=participants.id WHERE participantSessions.sessionID=$1',
-      values: [sessionData.id],
+    const participantsList = (
+      await db.any({
+        text:
+          'SELECT participants.name as ParticipantName FROM participantSessions ' +
+          'LEFT JOIN participants ON participantSessions.participantID=participants.id WHERE participantSessions.sessionID=$1',
+        values: [sessionData.id],
+      })
+    ).map((value) => {
+      return { ParticipantName: value.participantname }; // Need to do this to get the uppercase the name
     });
 
     response
