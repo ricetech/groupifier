@@ -54,6 +54,22 @@ function emailParticipantAdded(
     return false;
 }
 
+function emailParticipantGrouped(
+  email: string, recipientName: string, sessionName: string, members: string[]
+): boolean {
+  transporter.sendMail({
+      to: email,
+      subject: `Your group members for '${sessionName}'`,
+      text: `Hi ${recipientName},\n\nYour group members for 
+      the Groupifier Session named ${sessionName} have been
+      decided. They are:\n\n
+      ${members.join('\n')}\n\n
+      Regards,\n
+      The Groupifier Team`
+  });
+  return false;
+}
+
 export const createSession = functions.https.onRequest(
   async (request, response) => {
     const requestData: api.CreateSessionRequest = request.body;
