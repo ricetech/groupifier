@@ -1,10 +1,5 @@
+import React from 'react';
 
-
-export const GroupPage = () => {
-
-    return (
-        <div>
-            GROUP
-        </div>
-    )
-}
+export const GroupPage = () => (
+  <div>GROUP</div>
+);

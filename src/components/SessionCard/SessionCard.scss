@@ -1,68 +1,66 @@
-
 .session-card {
-    background: radial-gradient(109.5% 315.21% at 109.5% 110.9%, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%);
-    border-radius: 10px;
-    position: absolute;
-    width: 358px;
-    height: 211px;
-    left: 235px;
-    top: 256px;
-
-  
+  background: radial-gradient(
+    109.5% 315.21% at 109.5% 110.9%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border-radius: 10px;
+  position: absolute;
+  width: 358px;
+  height: 211px;
+  left: 235px;
+  top: 256px;
 }
 
-.session-name{
+.session-name {
+  position: absolute;
+  left: 8.38%;
+  right: 13.13%;
+  top: 9%;
+  bottom: 63.51%;
 
-    position: absolute;
-    left: 8.38%;
-    right: 13.13%;
-    top: 9%;
-    bottom: 63.51%;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 54px;
+  text-align: justify;
 
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 36px;
-    line-height: 54px;
-    text-align: justify;
-
-    color: #000000;
+  color: #000000;
 }
-.session-date{
-    position: absolute;
-    left: 8.38%;
-    right: 13.13%;
-    top: 33.65%;
-    bottom: 53.08%;
+.session-date {
+  position: absolute;
+  left: 8.38%;
+  right: 13.13%;
+  top: 33.65%;
+  bottom: 53.08%;
 
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 27px;
-    text-align: justify;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 27px;
+  text-align: justify;
 
-    color: #000000;
-
+  color: #000000;
 }
-.session-fraction{
+.session-fraction {
+  position: absolute;
+  left: 56.42%;
+  right: 6.15%;
+  top: 64.45%;
+  bottom: 10.9%;
 
-    position: absolute;
-    left: 56.42%;
-    right: 6.15%;
-    top: 64.45%;
-    bottom: 10.9%;
+  background: #74cdff;
+  border-radius: 8.51064px;
 
-    background: #74CDFF;
-    border-radius: 8.51064px;
+  font-family: 'Open Sans';
 
-    font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: normal;
+  font-size: 33.8221px;
+  line-height: 46px;
+  text-align: center;
 
-    font-style: normal;
-    font-weight: normal;
-    font-size: 33.8221px;
-    line-height: 46px;
-    text-align: center;
-
-    color: #FFFFFF;
+  color: #ffffff;
 }
