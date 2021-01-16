@@ -9,6 +9,7 @@
 
 # React build output
 build/
+.eslintcache
 
 # dependencies
 /node_modules
