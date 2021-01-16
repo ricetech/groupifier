@@ -6,7 +6,6 @@
 - createSession (POST): 
   - **Request**
     - HostName: String
-    - HostEmail: String
     - SessionName: String
     - Participants: List of Objects
         - ParticipantName: String
