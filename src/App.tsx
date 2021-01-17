@@ -8,27 +8,30 @@ import { HomePage } from './pages/HomePage/HomePage';
 import { DashboardPage } from './pages/DashboardPage/DashboardPage';
 import { SessionPage } from './pages/SessionPage/SessionPage';
 import { GroupBuilderPage } from './pages/GroupBuilderPage/GroupBuilderPage';
+import UserProvider from './providers/UserProvider';
 
 function App() {
   return (
-    <div className='App'>
-      <Router>
-        <Switch>
-          <Route path='/dashboard'>
-            <DashboardPage />
-          </Route>
-          <Route path='/group-builder'>
-            <GroupBuilderPage />
-          </Route>
-          <Route path='/session'>
-            <SessionPage />
-          </Route>
-          <Route path='/'>
-            <HomePage />
-          </Route>
-        </Switch>
-      </Router>
-    </div>
+    <UserProvider>
+      <div className='App'>
+        <Router>
+          <Switch>
+            <Route path='/dashboard'>
+              <DashboardPage />
+            </Route>
+            <Route path='/group-builder'>
+              <GroupBuilderPage />
+            </Route>
+            <Route path='/session'>
+              <SessionPage />
+            </Route>
+            <Route path='/'>
+              <HomePage />
+            </Route>
+          </Switch>
+        </Router>
+      </div>
+    </UserProvider>
   );
 }
 
