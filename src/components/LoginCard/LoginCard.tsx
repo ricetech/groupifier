@@ -27,6 +27,7 @@ export const LoginCard = () => {
     auth
       .sendSignInLinkToEmail(email, actionCodeSettings)
       .then(() => {
+        window.localStorage.setItem('emailForSignIn', email);
         // Send successful!
         // Disable button
         // Show tooltip telling user to check their email
