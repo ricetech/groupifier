@@ -18,36 +18,37 @@ const dummydata: Participant[] = [
   { value: 'Bregrob@email.com', label: 'wef' },
 ];
 
-export const GroupSelectionPage = () => {
-  const history = useHistory();
-  const [participants, setParticipants] = useState([]);
+interface GroupSelectionPageProps {
+  participants: Participant[];
+  sessionUID: String;
+}
 
-  useEffect(() => {
-    const getSessionParticipants = functions.httpsCallable(
-      'getSessionParticipants'
-    );
-    getSessionParticipants()
-      .then((result) => {
-        setParticipants(result.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, []);
+export const GroupSelectionPage: React.FC<GroupSelectionPageProps> = ({
+  participants,
+  sessionUID,
+}) => {
+  const history = useHistory();
+  const [dreamTeam, setDreamTeam] = useState<Participant[]>([]);
+  const [nightmareTeam, setNightmareTeam] = useState<Participant[]>([]);
+  useEffect(() => {}, []);
 
   const handleClick = () => {
     const updateParticipantPreferences = functions.httpsCallable(
       'updateParticipantPreferences'
     );
-    updateParticipantPreferences({}).then((result) => {
-      // Read result of the Cloud Function.
-      const sanitizedMessage = result.data.text;
-    });
-    history.push('/group-builder/success');
+    const dreamParticipantsStrings = dreamTeam.map((p) => p.label);
+    const nightmareParticipantsStrings = nightmareTeam.map((p) => p.label);
+    updateParticipantPreferences({
+      sessionUID,
+      DreamParticipants: dreamParticipantsStrings,
+      NightmareParticipants: nightmareParticipantsStrings,
+    })
+      .then((result) => {
+        console.log(result);
+        history.push('/group-builder/success');
+      })
+      .catch((e) => console.log(e));
   };
-
-  const [dreamTeam, setDreamTeam] = useState<Participant[]>([]);
-  const [nightmareTeam, setNightmareTeam] = useState<Participant[]>([]);
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -22,6 +22,8 @@ import { auth, functions } from '../../firebase';
 export const GroupBuilderPage = () => {
   const history = useHistory();
   const match = useRouteMatch();
+  const [participants, setParticipants] = useState([]);
+  const [sessionUID, setSessionUID] = useState('');
 
   useEffect(() => {
     if (auth.isSignInWithEmailLink(window.location.href)) {
@@ -40,17 +42,30 @@ export const GroupBuilderPage = () => {
         .signInWithEmailLink(email, window.location.href)
         .then(() => {
           window.localStorage.removeItem('emailForSignIn');
-          history.replace(
-            `/group-builder?sid=${new URL(
-              window.location.href
-            ).searchParams.get('sid')}`
-          );
+
+          const uid = new URL(window.location.href).searchParams.get('sid');
+          if (uid) {
+            setSessionUID(uid);
+          }
+
+          history.replace(`/group-builder?sid=${sessionUID}`);
           const setParticipantFirebaseUID = functions.httpsCallable(
             'setParticipantFirebaseUID'
           );
           setParticipantFirebaseUID().catch((e) => {
             console.log(e);
           });
+
+          const getSessionParticipants = functions.httpsCallable(
+            'getSessionParticipants'
+          );
+          getSessionParticipants()
+            .then((result) => {
+              setParticipants(result.data);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
         })
         .catch((error) => {
           alert(error);
@@ -72,7 +87,10 @@ export const GroupBuilderPage = () => {
                 <GroupBuilderSuccessPage />
               </Route>
               <Route path={`${match.path}/`}>
-                <GroupSelectionPage />
+                <GroupSelectionPage
+                  participants={participants}
+                  sessionUID={sessionUID}
+                />
               </Route>
             </Switch>
           </Router>
