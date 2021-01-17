@@ -3,6 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Papa from 'papaparse';
+import axios from 'axios';
 
 export const CreateSessionPage = () => {
   const [sessionName, setSessionName] = useState('');
@@ -41,10 +42,22 @@ export const CreateSessionPage = () => {
       });
     }
   };
-  const buttonRef = React.createRef();
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    axios
+      .post(
+        'https://us-central1-groupifier-htn20.cloudfunctions.net/createSession',
+        { participants: sessionData }
+      )
+      .then((res) => {
+        console.log(res);
+        console.log(res.data);
+      });
+  };
+
   return (
     <div className='form-card'>
-      <form>
+      <form onSubmit={handleSubmit}>
         <input
           type='text'
           value={sessionName}
@@ -53,6 +66,7 @@ export const CreateSessionPage = () => {
           onChange={handleChangeName}
         />
         <input type='file' name='file' onChange={handleChangeData} />
+        <input type="submit" value="Submit" />
       </form>
     </div>
   );

@@ -3,18 +3,17 @@
 
 ## Session Endpoint (for the host)
 
-- createSession (POST): 
+- createSession (POST):
   - **Request**
     - HostName: String
     - SessionName: String
     - Participants: List of Objects
-        - ParticipantName: String
-        - ParticipantEmail: String
+      - ParticipantName: String
+      - ParticipantEmail: String
   - **Response**:
     - Datetime: Long (Unix Time)
     - SessionName: String
     - SessionUID: String
-    
 - getAllSessions (GET):
   - **Request**:
   - **Response**:
@@ -25,13 +24,11 @@
       - SessionDatetime: Long (Unix Time)
       - SessionUID: String
       - SessionStatus: String
-  
 - solveSession: (POST)
   - **Request**:
     - SessionsUID: String
   - **Response**:
     - SessionStatus: String
-  
 - getSession: (GET)
   - **Request**:
     - SessionUID: String
@@ -47,7 +44,7 @@
     - ParticipantGroups: List of Arrays (Can be NULL)
       - List of Objects:
         - ParticipantName: String
-  
+
 ## Participant endpoints
 
 - getSessionParticipants: (GET)
@@ -57,16 +54,16 @@
     - Participants: Array of Objects
       - ParticipantName: String
       - ParticipantID: Number
-  
 - setParticipantFirebaseUID: (POST) (The Authorization header contains enough information to do everything)
+
   - **Request**:
   - **Response**:
 
 - updateParticipantPreferences (POST):
   - **Request**:
     - SessionUID: String
-    - DreamParticipants: Array of Strings***
-    - NightmareParticipants: Array of Strings***
+    - DreamParticipants: Array of Strings\*\*\*
+    - NightmareParticipants: Array of Strings\*\*\*
   - **Response**:
-  
-***: For updateParticipantPreferences, the strings are a number. The thing is, the number is so big that Javascript rounds it. Just send the number as a string, seems to work fine.
+
+\*\*\*: For updateParticipantPreferences, the strings are a number. The thing is, the number is so big that Javascript rounds it. Just send the number as a string, seems to work fine.
