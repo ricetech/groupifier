@@ -41,7 +41,7 @@ export const GroupBuilderPage = () => {
       auth
         .signInWithEmailLink(email, window.location.href)
         .then(() => {
-          window.localStorage.removeItem('emailForSignIn');
+          window.localStorage.removeItem('pEmailForSignIn');
 
           const uid = new URL(window.location.href).searchParams.get('sid');
           if (uid) {
