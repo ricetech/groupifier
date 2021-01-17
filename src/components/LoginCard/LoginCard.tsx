@@ -5,7 +5,9 @@ import FormLabel from 'react-bootstrap/FormLabel';
 import FormControl from 'react-bootstrap/FormControl';
 import FormText from 'react-bootstrap/FormText';
 import Button from 'react-bootstrap/Button';
+
 import Modal from 'react-bootstrap/Modal';
+import logo from '../../assets/logo.png';
 
 import { auth } from '../../firebase';
 
@@ -58,7 +60,7 @@ export const LoginCard = () => {
 
   return (
     <div className='LoginCard'>
-      <img src='' />
+      <img src={logo} className='logo' alt='logo' />
       <h1 className='Title'>groupifier</h1>
       <p className='AboutText'>
         A group generator that cares about the preferences of each person.
