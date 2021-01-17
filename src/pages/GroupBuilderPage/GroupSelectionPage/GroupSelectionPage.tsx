@@ -30,16 +30,15 @@ export const GroupSelectionPage: React.FC<GroupSelectionPageProps> = ({
   const history = useHistory();
   const [dreamTeam, setDreamTeam] = useState<Participant[]>([]);
   const [nightmareTeam, setNightmareTeam] = useState<Participant[]>([]);
-  useEffect(() => {}, []);
 
   const handleClick = () => {
     const updateParticipantPreferences = functions.httpsCallable(
       'updateParticipantPreferences'
     );
-    const dreamParticipantsStrings = dreamTeam.map((p) => p.label);
-    const nightmareParticipantsStrings = nightmareTeam.map((p) => p.label);
+    const dreamParticipantsStrings = dreamTeam.map((p) => p.value);
+    const nightmareParticipantsStrings = nightmareTeam.map((p) => p.value);
     updateParticipantPreferences({
-      sessionUID,
+      SessionUID: sessionUID,
       DreamParticipants: dreamParticipantsStrings,
       NightmareParticipants: nightmareParticipantsStrings,
     })
