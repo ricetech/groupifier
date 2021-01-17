@@ -15,7 +15,7 @@ import { Sidebar } from '../../components/Sidebar/Sidebar';
 import { CurrentSessionsPage } from './CurrentSessionsPage/CurrentSessionsPage';
 import { CreateSessionPage } from './CreateSessionPage/CreateSessionPage';
 
-import { auth } from '../../firebase';
+import { auth, functions } from '../../firebase';
 
 export const DashboardPage = () => {
   const match = useRouteMatch();
@@ -42,6 +42,15 @@ export const DashboardPage = () => {
           alert(error);
         });
     }
+
+    const getAllSessions = functions.httpsCallable('getAllSessions');
+    getAllSessions()
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }, []);
 
   return (
