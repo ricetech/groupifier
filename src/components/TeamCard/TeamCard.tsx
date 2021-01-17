@@ -1,12 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Select from 'react-select';
 import Row from 'react-bootstrap/Row';
 import { Participant } from '../../interfaces';
-
-const name = [
-  { value: 'student1', label: 'Bob' },
-  { value: 'student2', label: 'Bobby' },
-];
 
 interface TeamCardProps {
   teamCardOption: String;

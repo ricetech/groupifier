@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useHistory } from 'react-router-dom';
@@ -6,17 +6,6 @@ import { Participant } from '../../../interfaces';
 import { functions } from '../../../firebase';
 
 import { TeamCard } from '../../../components/TeamCard/TeamCard';
-
-const dummydata: Participant[] = [
-  { value: 'Bob@email.com', label: 'Bob' },
-  { value: 'qwd@email.com', label: 'Bewe' },
-  { value: 'Bqwdob@email.com', label: 'afdsf' },
-  { value: 'ergre@email.com', label: 'qwdqwdqwdqwdqwdqwddwqwdqw' },
-  { value: 'Bergob@email.com', label: '23rqwd23' },
-  { value: 'reg@email.com', label: 'wefewqdqwdqwdwf' },
-  { value: 'Bob@email.com', label: '6' },
-  { value: 'Bregrob@email.com', label: 'wef' },
-];
 
 interface GroupSelectionPageProps {
   participants: Participant[];

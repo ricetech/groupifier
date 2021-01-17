@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Papa from 'papaparse';
-import axios from 'axios';
 import { functions } from '../../../firebase';
 
 interface CreateSessionPageProps {

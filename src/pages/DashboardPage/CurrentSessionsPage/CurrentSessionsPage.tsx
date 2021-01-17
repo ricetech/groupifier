@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Row from 'react-bootstrap/Row';
 import { useHistory } from 'react-router-dom';
 import { SessionCard } from '../../../components/SessionCard/SessionCard';
-import { functions } from '../../../firebase';
 
 interface CurrentSessionsPageProps {
   // eslint-disable-next-line
