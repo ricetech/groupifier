@@ -52,7 +52,7 @@ export const GroupSelectionPage = () => {
     <div>
       <Row className='groupifier-container'>groupifier</Row>
       <Row>
-        <Col xs={10} className='team-card-container'>
+        <Col xs={12} className='team-card-container'>
           <TeamCard
             teamCardOption='Dream Team'
             data={dummydata}
