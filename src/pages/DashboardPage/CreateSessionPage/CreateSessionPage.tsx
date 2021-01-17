@@ -15,6 +15,7 @@ export const CreateSessionPage: React.FC<CreateSessionPageProps> = ({
 }) => {
   const history = useHistory();
   const [sessionName, setSessionName] = useState('');
+  const [sessionGroupSize, setSessionGroupSize] = useState(1);
   const [sessionData, setSessionData] = useState([
     { partipantEmail: '', participantName: '' },
   ]);
@@ -25,6 +26,10 @@ export const CreateSessionPage: React.FC<CreateSessionPageProps> = ({
 
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSessionName(event.target.value);
+  };
+
+  const handleChangeSize = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSessionGroupSize(+event.target.value);
   };
 
   const handleChangeData = async (
@@ -57,6 +62,7 @@ export const CreateSessionPage: React.FC<CreateSessionPageProps> = ({
       SessionName: sessionName,
       HostName: hostName,
       Participants: sessionData,
+      GroupSize: sessionGroupSize,
     })
       .then(() => {
         history.push('/dashboard');
@@ -79,6 +85,13 @@ export const CreateSessionPage: React.FC<CreateSessionPageProps> = ({
             id='exampleFormControlFile1'
             label='Upload CSV'
             onChange={handleChangeData}
+          />
+          <Form.Control
+            type='number'
+            value={sessionGroupSize}
+            name='name'
+            placeholder='Group Size'
+            onChange={handleChangeSize}
           />
         </Form.Group>
         <Button variant='light' size='sm' type='submit'>
