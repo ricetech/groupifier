@@ -37,6 +37,16 @@
 
   color: #000000;
 }
+
+.solved-session-name {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 2em;
+  text-align: justify;
+
+  color: #62d36b;
+}
 .session-date {
   font-family: Poppins;
   font-style: normal;
@@ -47,6 +57,8 @@
   color: #000000;
 }
 .session-fraction {
+  outline: none;
+  border: none;
   float: right;
   margin: 1em 1em 0 0;
 
