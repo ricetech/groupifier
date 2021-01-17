@@ -39,12 +39,6 @@ export const LoginCard = () => {
       <p className='SignInWarning'>
         Note: This sign-up/sign-in is for Hosts ONLY.
       </p>
-      <p>
-        <b>
-          If you are a participant, please use the link sent to your email
-          instead.
-        </b>
-      </p>
       <Form>
         <FormGroup controlId='loginFormEmail'>
           <FormLabel>Email Address</FormLabel>
