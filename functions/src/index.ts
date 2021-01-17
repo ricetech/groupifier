@@ -17,6 +17,7 @@ const transporter = nodemailer.createTransport(smtpConfig, {
   from: 'Groupifier <no-reply@groupifier.space>',
 });
 
+// @ts-ignore
 function emailParticipantAdded(
   email: string,
   recipientName: string,
