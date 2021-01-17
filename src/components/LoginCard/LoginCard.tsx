@@ -61,16 +61,10 @@ export const LoginCard = () => {
       <img src='' />
       <h1 className='Title'>groupifier</h1>
       <p className='AboutText'>
-        Groupifier is a web app that allows classrooms or teams to easily
-        generate the optimal group assignments.
-      </p>
-      <h2>Sign-up/sign-in as a Host</h2>
-      <p className='SignInWarning'>
-        Note: This sign-up/sign-in is for Hosts ONLY.
+        A group generator that cares about the preferences of each person.
       </p>
       <Form>
         <FormGroup controlId='loginFormEmail'>
-          <FormLabel>Email Address</FormLabel>
           <FormControl
             type='email'
             placeholder='Your email'
