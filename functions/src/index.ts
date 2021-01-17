@@ -17,7 +17,6 @@ const transporter = nodemailer.createTransport(smtpConfig, {
   from: 'Groupifier <no-reply@groupifier.space>',
 });
 
-// @ts-ignore
 function emailParticipantAdded(
   email: string,
   recipientName: string,
@@ -116,6 +115,17 @@ export const createSession = functions.https.onCall(
 
       // Wait for all participants to be added
       await Promise.all(participantsPromises);
+
+      // Send the emails
+      for (const participant of requestData.Participants) {
+        emailParticipantAdded(
+          participant.ParticipantEmail,
+          participant.ParticipantName,
+          requestData.HostName,
+          uniqueSessionID,
+          requestData.SessionName
+        );
+      }
 
       return {
         SessionDatetime: sessionData.datetime,
