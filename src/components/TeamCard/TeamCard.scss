@@ -1,9 +1,8 @@
 .team-card {
   position: absolute;
-  width: 546px;
-  height: 432px;
-  left: 25px;
-  top: 100px;
+  width: 30em;
+  height: 30em;
+  padding: 2em;
 
   background: radial-gradient(
     89.93% 143.65% at 96.61% 93.63%,
@@ -19,11 +18,8 @@
   );
 }
 .team-title {
-  position: absolute;
-  left: 6.41%;
-  right: 42.31%;
-  top: 7.18%;
-  bottom: 85.88%;
+  position: relative;
+  float: left;
 
   font-family: Poppins;
   font-style: italic;
@@ -36,11 +32,8 @@
 }
 
 .team-option {
-  position: absolute;
-  left: 6.23%;
-  right: 3.48%;
-  top: 11.57%;
-  bottom: 75.23%;
+  position: relative;
+  float: left;
 
   font-family: Poppins;
   font-style: normal;
@@ -51,9 +44,6 @@
   color: #000000;
 }
 .basic-multi-select {
-  position: absolute;
-  left: 0%;
-  right: 5.86%;
-  top: 31.94%;
-  bottom: 53.24%;
+  position: relative;
+  width: 100%;
 }
