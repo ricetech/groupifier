@@ -263,6 +263,28 @@ export const getSession = functions.https.onCall(
       return { ParticipantName: value.participantname }; // Need to do this to get the uppercase the name
     });
 
+    const groupIDs = await db.any({
+      text: 'SELECT * FROM Groups WHERE SessionID=$1',
+      values: [sessionData.id],
+    });
+
+    const groups = [];
+    for (const group of groupIDs) {
+      const participants = await db.any({
+        text:
+          'SELECT participants.name as name FROM participantgroups ' +
+          'LEFT JOIN participants ON participantgroups.participantid=participants.id ' +
+          'WHERE participantgroups.groupid=$1',
+        values: [group.id],
+      });
+
+      const participantsNames = participants.map((p) => {
+        return { ParticipantName: p.name };
+      });
+
+      groups.push(participantsNames);
+    }
+
     return {
       TotalParticipants: totalParticipants,
       RespondedParticipants: respondedParticipants,
@@ -271,7 +293,7 @@ export const getSession = functions.https.onCall(
       SessionUID: sessionData.uid,
       SessionStatus: sessionData.status, // TODO: Implement status
       Participants: participantsList,
-      ParticipantsGroups: null, // TODO: Implement this
+      ParticipantsGroups: groups,
     };
   }
 );
