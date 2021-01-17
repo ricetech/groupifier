@@ -44,7 +44,7 @@ export const CreateSessionPage: React.FC<CreateSessionPageProps> = ({
                 ParticipantName: row2[0],
               };
             });
-            setSessionData(newData);
+            setSessionData(newData.slice(0, -1));
           }
         },
       });

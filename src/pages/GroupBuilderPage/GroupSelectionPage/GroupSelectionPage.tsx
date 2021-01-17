@@ -20,6 +20,7 @@ const dummydata: Participant[] = [
 
 export const GroupSelectionPage = () => {
   const history = useHistory();
+  const [participants, setParticipants] = useState([]);
 
   useEffect(() => {
     const getSessionParticipants = functions.httpsCallable(
@@ -27,7 +28,7 @@ export const GroupSelectionPage = () => {
     );
     getSessionParticipants()
       .then((result) => {
-        const sanitizedMessage = result.data.text;
+        setParticipants(result.data);
       })
       .catch((e) => {
         console.log(e);
@@ -55,12 +56,12 @@ export const GroupSelectionPage = () => {
         <Col xs={12} className='team-card-container'>
           <TeamCard
             teamCardOption='Dream Team'
-            data={dummydata}
+            data={participants}
             setTeam={setDreamTeam}
           />
           <TeamCard
             teamCardOption='Nightmare Team'
-            data={dummydata}
+            data={participants}
             setTeam={setNightmareTeam}
           />
         </Col>
