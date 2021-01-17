@@ -1,0 +1,79 @@
+.session-card {
+  background: radial-gradient(
+    109.5% 315.21% at 109.5% 110.9%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border: 2px solid;
+  border-image-source: radial-gradient(
+    91.16% 91.16% at 3.68% 6.69%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border-radius: 10px;
+  width: 20em;
+  height: 10em;
+  margin: 1em;
+}
+
+.session-card-header {
+  background: radial-gradient(
+    118.58% 1149.12% at -1.68% 5.22%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border-radius: 10px 10px 0px 0px;
+  width: 100%;
+  height: 60%;
+  padding: 1em 2em;
+}
+
+.session-name {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 2em;
+  text-align: justify;
+
+  color: #000000;
+}
+
+.solved-session-name {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 2em;
+  text-align: justify;
+
+  color: #62d36b;
+}
+.session-date {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1em;
+  text-align: justify;
+
+  color: #000000;
+}
+.session-fraction {
+  outline: none;
+  border: none;
+  float: right;
+  margin: 1em 1em 0 0;
+
+  height: auto;
+  background: #74cdff;
+  border-radius: 8.51064px;
+
+  font-family: 'Open Sans';
+
+  font-style: normal;
+  font-weight: normal;
+  font-size: 1em;
+  text-align: center;
+
+  padding: 0.1em 0.8em;
+
+  color: #ffffff;
+}

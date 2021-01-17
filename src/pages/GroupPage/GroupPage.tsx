@@ -1,10 +1,3 @@
-
-
 export const GroupPage = () => {
-
-    return (
-        <div>
-            GROUP
-        </div>
-    )
-}
+  return <div>GROUP</div>;
+};

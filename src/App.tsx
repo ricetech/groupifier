@@ -1,25 +1,37 @@
 import React from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.scss';
+
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
+import { HomePage } from './pages/HomePage/HomePage';
+import { DashboardPage } from './pages/DashboardPage/DashboardPage';
+import { SessionPage } from './pages/SessionPage/SessionPage';
+import { GroupBuilderPage } from './pages/GroupBuilderPage/GroupBuilderPage';
+import UserProvider from './providers/UserProvider';
 
 function App() {
   return (
-    <div className='App'>
-      <header className='App-header'>
-        <img src={logo} className='App-logo' alt='logo' />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className='App-link'
-          href='https://reactjs.org'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <UserProvider>
+      <div className='App'>
+        <Router>
+          <Switch>
+            <Route path='/dashboard'>
+              <DashboardPage />
+            </Route>
+            <Route path='/group-builder'>
+              <GroupBuilderPage />
+            </Route>
+            <Route path='/session'>
+              <SessionPage />
+            </Route>
+            <Route path='/'>
+              <HomePage />
+            </Route>
+          </Switch>
+        </Router>
+      </div>
+    </UserProvider>
   );
 }
 

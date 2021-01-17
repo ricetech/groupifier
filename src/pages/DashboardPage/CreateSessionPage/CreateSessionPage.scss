@@ -1,0 +1,19 @@
+.form-card {
+  background: radial-gradient(
+    101.46% 100.93% at 102.57% 101.71%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.570607) 33.6%,
+    rgba(255, 255, 255, 0) 97.51%
+  );
+  border-radius: 32px;
+
+  border: 2px solid;
+  border-image-source: radial-gradient(
+    91.16% 91.16% at 3.68% 6.69%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+
+  padding: 4em;
+  margin: 2em 0 0 3em;
+}
