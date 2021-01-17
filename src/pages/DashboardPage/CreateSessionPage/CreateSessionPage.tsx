@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Papa from 'papaparse';
@@ -12,6 +13,7 @@ interface CreateSessionPageProps {
 export const CreateSessionPage: React.FC<CreateSessionPageProps> = ({
   hostName,
 }) => {
+  const history = useHistory();
   const [sessionName, setSessionName] = useState('');
   const [sessionData, setSessionData] = useState([
     { partipantEmail: '', participantName: '' },
@@ -57,9 +59,9 @@ export const CreateSessionPage: React.FC<CreateSessionPageProps> = ({
       Participants: sessionData,
     })
       .then((result) => {
-        const sanitizedMessage = result.data.text;
+        history.push('/dashboard');
       })
-      .catch((err) => console.log(err));
+      .catch((err) => alert(`Error. Please try again:\n${err}`));
   };
 
   return (
