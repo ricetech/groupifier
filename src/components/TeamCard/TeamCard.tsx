@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import Row from 'react-bootstrap/Row';
 import { Participant } from '../../interfaces';
@@ -20,6 +20,10 @@ export const TeamCard: React.FC<TeamCardProps> = ({
   setTeam,
 }) => {
   // const [team, setTeam] = useState<Participant[]>([]);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   const handleChange = (
     selection: IterableIterator<Participant> | undefined

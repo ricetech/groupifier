@@ -22,7 +22,7 @@ import { auth, functions } from '../../firebase';
 export const GroupBuilderPage = () => {
   const history = useHistory();
   const match = useRouteMatch();
-  const [participants, setParticipants] = useState([]);
+  const [participants, setParticipants] = useState<Participant[]>([]);
   const [sessionUID, setSessionUID] = useState('');
 
   useEffect(() => {
@@ -37,18 +37,18 @@ export const GroupBuilderPage = () => {
       if (!email) {
         email = '';
       }
-
       auth
         .signInWithEmailLink(email, window.location.href)
         .then(() => {
           window.localStorage.removeItem('pEmailForSignIn');
 
           const uid = new URL(window.location.href).searchParams.get('sid');
+          console.log(uid);
           if (uid) {
             setSessionUID(uid);
           }
 
-          history.replace(`/group-builder?sid=${sessionUID}`);
+          history.replace(`/group-builder?sid=${uid}`);
           const setParticipantFirebaseUID = functions.httpsCallable(
             'setParticipantFirebaseUID'
           );
@@ -59,9 +59,18 @@ export const GroupBuilderPage = () => {
           const getSessionParticipants = functions.httpsCallable(
             'getSessionParticipants'
           );
-          getSessionParticipants()
+          getSessionParticipants({ SessionUID: uid })
             .then((result) => {
-              setParticipants(result.data);
+              console.log(result.data);
+
+              const newParticipants: Participant[] = result.data.Participants.map(
+                // eslint-disable-next-line
+                (d: any) => ({
+                  label: d.ParticipantName,
+                  value: d.ParticipantID,
+                })
+              );
+              setParticipants(newParticipants);
             })
             .catch((e) => {
               console.log(e);
@@ -78,7 +87,7 @@ export const GroupBuilderPage = () => {
     <div>
       <Row className='full-row'>
         <Col xs={2}>
-          <Sidebar name='Bob' />
+          <Sidebar name='A' />
         </Col>
         <Col xs={10}>
           <Router>
