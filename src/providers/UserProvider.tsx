@@ -1,9 +1,8 @@
 import React, { Component, createContext } from 'react';
-import 'firebase/auth';
-import firebase from 'firebase';
+import { auth, User } from '../firebase';
 
 interface State {
-  user: firebase.User | null;
+  user: User | null;
 }
 
 export const UserContext = createContext<State>({ user: null });
@@ -19,7 +18,7 @@ class UserProvider extends Component {
   }
 
   componentDidMount = () => {
-    firebase.auth().onAuthStateChanged((userAuth) => {
+    auth.onAuthStateChanged((userAuth) => {
       // eslint-disable-next-line no-use-before-define
       this.setState({ user: userAuth });
     });
