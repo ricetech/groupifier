@@ -41,20 +41,19 @@ export const DashboardPage = () => {
         .signInWithEmailLink(email, window.location.href)
         .then((result) => {
           window.localStorage.removeItem('emailForSignIn');
+          const getAllSessions = functions.httpsCallable('getAllSessions');
+          getAllSessions()
+            .then((sessionsResult) => {
+              // console.log(result.data);
+              setSessions(sessionsResult.data);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
         })
         .catch((error) => {
           alert(error);
           auth.signOut().finally(() => history.push('/'));
-        });
-
-      const getAllSessions = functions.httpsCallable('getAllSessions');
-      getAllSessions()
-        .then((result) => {
-          // console.log(result.data);
-          setSessions(result.data);
-        })
-        .catch((e) => {
-          console.log(e);
         });
     }
   }, []);
