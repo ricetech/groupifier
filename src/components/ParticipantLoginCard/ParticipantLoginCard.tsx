@@ -97,7 +97,7 @@ export const ParticipantLoginCard = () => {
           <Modal.Title>Success!</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Check your email for a link to contiuue the login process.
+          Check your email for a link to continue the login process.
         </Modal.Body>
         <Modal.Footer>
           <Button variant='primary' onClick={handleClose}>
@@ -118,7 +118,7 @@ export const ParticipantLoginCard = () => {
         <Modal.Body>Error! There seems to be an issue. Try again.</Modal.Body>
         <Modal.Footer>
           <Button variant='primary' onClick={handleCloseFail}>
-            Understood
+            OK
           </Button>
         </Modal.Footer>
       </Modal>
