@@ -9,6 +9,16 @@ export const LoginCard = () => (
       Lorem Ipsum has been the industry's standard dummy text ever since the
       1500s, when an unk
     </p>
+    <h2>Sign-up/sign-in as a Host</h2>
+    <p className='SignInWarning'>
+      Note: This sign-up/sign-in is for Hosts ONLY.
+    </p>
+    <p>
+      <b>
+        If you are a participant, please use the link sent to your email
+        instead.
+      </b>
+    </p>
     <button type='button'>Email Auth Button</button>
   </div>
 );
