@@ -24,6 +24,7 @@ export const CurrentSessionsPage: React.FC<CurrentSessionsPageProps> = ({
   const cards = sessions.map((session) => (
     <SessionCard
       key={session.SessionUID}
+      sessionUID={session.SessionUID}
       sessionName={session.SessionName}
       sessionDate={new Date(1000 * session.SessionDatetime).toDateString()}
       currentParticipants={session.RespondedParticipants}
