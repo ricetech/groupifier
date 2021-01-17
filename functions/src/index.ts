@@ -17,7 +17,6 @@ const transporter = nodemailer.createTransport(smtpConfig, {
   from: 'Groupifier <no-reply@groupifier.space>',
 });
 
-// @ts-ignore
 function emailParticipantAdded(
   email: string,
   recipientName: string,
@@ -37,7 +36,6 @@ function emailParticipantAdded(
   });
 }
 
-// @ts-ignore
 function emailParticipantGrouped(
   email: string,
   recipientName: string,
@@ -84,9 +82,6 @@ export const createSession = functions.https.onCall(
         ],
       });
 
-      // Store the newly created participants
-      const participantsData: number[] = [];
-
       // Variable to hold pending promises. This way, we can add the participants more quickly.
       const participantsPromises = [];
 
@@ -108,14 +103,23 @@ export const createSession = functions.https.onCall(
                 'INSERT INTO ParticipantSessions (ParticipantID, SessionID) VALUES ($1, $2)',
               values: [participantData.id, sessionData.id],
             });
-
-            participantsData.push(participantData);
           })(p)
         );
       }
 
       // Wait for all participants to be added
       await Promise.all(participantsPromises);
+
+      // Send the emails
+      for (const participant of requestData.Participants) {
+        emailParticipantAdded(
+          participant.ParticipantEmail,
+          participant.ParticipantName,
+          requestData.HostName,
+          uniqueSessionID,
+          requestData.SessionName
+        );
+      }
 
       return {
         SessionDatetime: sessionData.datetime,
@@ -144,9 +148,17 @@ export const getAllSessions = functions.https.onCall(async (data, context) => {
       })
     ).count;
 
+    const respondedParticipants = (
+      await db.one({
+        text:
+          'SELECT COUNT(DISTINCT sourceparticipantid) as count FROM rankings WHERE sessionid=$1',
+        values: [session.id],
+      })
+    ).count;
+
     responseData.push({
       TotalParticipants: totalParticipants,
-      RespondedParticipants: 0, // TODO: Implement this
+      RespondedParticipants: respondedParticipants,
       SessionName: session.name,
       SessionDatetime: session.datetime,
       SessionUID: session.uid,
@@ -160,7 +172,7 @@ export const getAllSessions = functions.https.onCall(async (data, context) => {
 export const solveSession = functions.https.onCall(
   async (requestData: api.SolveSessionRequest, context) => {
     const sessionData = await db.one({
-      text: 'SELECT id, groupSize FROM sessions WHERE uid=$1',
+      text: 'SELECT id, groupSize, name FROM sessions WHERE uid=$1',
       values: [requestData.SessionUID],
     });
 
@@ -205,6 +217,13 @@ export const solveSession = functions.https.onCall(
               'INSERT INTO ParticipantGroups (SessionID, ParticipantID, GroupID) VALUES ($1, $2, $3)',
             values: [sessionData.id, participant.id, groupID],
           });
+
+          emailParticipantGrouped(
+            participant.email,
+            participant.name,
+            sessionData.name,
+            group.map((p) => p.name)
+          );
         }
       }
 
@@ -236,6 +255,14 @@ export const getSession = functions.https.onCall(
       })
     ).count;
 
+    const respondedParticipants = (
+      await db.one({
+        text:
+          'SELECT COUNT(DISTINCT sourceparticipantid) as count FROM rankings WHERE sessionid=$1',
+        values: [sessionData.id],
+      })
+    ).count;
+
     const participantsList = (
       await db.any({
         text:
@@ -247,15 +274,37 @@ export const getSession = functions.https.onCall(
       return { ParticipantName: value.participantname }; // Need to do this to get the uppercase the name
     });
 
+    const groupIDs = await db.any({
+      text: 'SELECT * FROM Groups WHERE SessionID=$1',
+      values: [sessionData.id],
+    });
+
+    const groups = [];
+    for (const group of groupIDs) {
+      const participants = await db.any({
+        text:
+          'SELECT participants.name as name FROM participantgroups ' +
+          'LEFT JOIN participants ON participantgroups.participantid=participants.id ' +
+          'WHERE participantgroups.groupid=$1',
+        values: [group.id],
+      });
+
+      const participantsNames = participants.map((p) => {
+        return { ParticipantName: p.name };
+      });
+
+      groups.push(participantsNames);
+    }
+
     return {
       TotalParticipants: totalParticipants,
-      RespondedParticipants: 0, // TODO: Implement this
+      RespondedParticipants: respondedParticipants,
       SessionName: sessionData.name,
       SessionDatetime: sessionData.datetime,
       SessionUID: sessionData.uid,
       SessionStatus: sessionData.status, // TODO: Implement status
       Participants: participantsList,
-      ParticipantsGroups: null, // TODO: Implement this
+      ParticipantsGroups: groups,
     };
   }
 );
