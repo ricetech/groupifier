@@ -1,7 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FormGroup from 'react-bootstrap/FormGroup';
-import FormLabel from 'react-bootstrap/FormLabel';
 import FormControl from 'react-bootstrap/FormControl';
 import FormText from 'react-bootstrap/FormText';
 import Button from 'react-bootstrap/Button';
@@ -28,15 +27,9 @@ export const LoginCard = () => {
   const handleClose = () => setShowSuccess(false);
   const handleCloseFail = () => setShowFail(false);
 
-  const handleShow = (event: React.FormEvent) => {
-    event.preventDefault();
-  };
-
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
-  const buttonRef = useRef();
-
   const handleContinueClick = (event: React.FormEvent) => {
     event.preventDefault();
     auth

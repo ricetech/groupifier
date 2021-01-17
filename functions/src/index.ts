@@ -5,14 +5,8 @@ import * as pg from 'pg-promise';
 import { config, smtpConfig } from './databasesecret';
 import * as nodemailer from 'nodemailer';
 import { v4 as uuid } from 'uuid';
-// eslint-disable-next-line no-unused-vars
 import * as api from './interfaces/api';
-// eslint-disable-next-line no-unused-vars
-import { auth } from 'firebase-admin/lib/auth';
-import {
-  GetSessionParticipantRequest,
-  GetSessionRequest,
-} from './interfaces/api';
+import { Solver } from './solver';
 
 admin.initializeApp();
 
@@ -22,23 +16,6 @@ const db = pg()(config);
 const transporter = nodemailer.createTransport(smtpConfig, {
   from: 'Groupifier <no-reply@groupifier.space>',
 });
-
-/**
- * Decodes the token sent in the 'Authorization' header. Note that some other checks might need to be done to make
- * sure the user is indeed allowed to access a resource.
- *
- * @param {functions.https.Request} request - Incoming HTTP request
- */
-async function authUser(
-  request: functions.https.Request
-): Promise<auth.DecodedIdToken> {
-  const token = request.get('Authorization');
-  if (token === undefined) {
-    throw new Error('Not authenticated!');
-  }
-
-  return await admin.auth().verifyIdToken(token);
-}
 
 function emailParticipantAdded(
   email: string,
@@ -51,16 +28,14 @@ function emailParticipantAdded(
   transporter.sendMail({
     to: email,
     subject: `ACTION REQUIRED: You've been added to the Groupifier session '${sessionName}'`,
-    html:
-      `<div style="color:black;"><p>Hi ${recipientName},<br /></p>
+    html: `<div style="color:black;"><p>Hi ${recipientName},<br /></p>
       <p>${hostName} has invited you to a new Groupifier Session named ${sessionName}.</p>
       <p>To submit your preferences for a group, please sign in with your email (${email}) using the link below ASAP.</p>
       <p><a href="${url}">${url}</a></p>
-      <p>Regards,<br>The Groupifier Team</p></div>`
+      <p>Regards,<br>The Groupifier Team</p></div>`,
   });
 }
 
-// @ts-ignore
 function emailParticipantGrouped(
   email: string,
   recipientName: string,
@@ -77,18 +52,19 @@ function emailParticipantGrouped(
   });
 }
 
-export const createSession = functions.https.onRequest(
-  async (request, response) => {
-    const requestData: api.CreateSessionRequest = request.body;
-    const callerData = await authUser(request);
-
-    await db.tx(async (t) => {
+export const createSession = functions.https.onCall(
+  async (requestData: api.CreateSessionRequest, context) => {
+    return await db.tx(async (t) => {
       // Create the host
       const hostID = await t
         .one({
           text:
             'INSERT INTO hosts (FirebaseUID, Name, Email) VALUES ($1, $2, $3) ON CONFLICT(email) DO UPDATE SET email=$3, firebaseUID=$1 RETURNING id',
-          values: [callerData.uid, requestData.HostName, callerData.email],
+          values: [
+            context.auth!.uid,
+            requestData.HostName,
+            context.auth!.token.email,
+          ],
         })
         .then((data) => data.id);
 
@@ -97,12 +73,14 @@ export const createSession = functions.https.onRequest(
       // Create the session
       const sessionData = await t.one({
         text:
-          'INSERT INTO sessions (UID, Name, HostID) VALUES ($1, $2, $3) RETURNING extract(epoch from datetime) as Datetime, name, uid, id',
-        values: [uniqueSessionID, requestData.SessionName, hostID],
+          'INSERT INTO sessions (UID, Name, HostID, GroupSize) VALUES ($1, $2, $3, $4) RETURNING extract(epoch from datetime) as Datetime, name, uid, id',
+        values: [
+          uniqueSessionID,
+          requestData.SessionName,
+          hostID,
+          requestData.GroupSize,
+        ],
       });
-
-      // Store the newly created participants
-      const participantsData: number[] = [];
 
       // Variable to hold pending promises. This way, we can add the participants more quickly.
       const participantsPromises = [];
@@ -125,8 +103,6 @@ export const createSession = functions.https.onRequest(
                 'INSERT INTO ParticipantSessions (ParticipantID, SessionID) VALUES ($1, $2)',
               values: [participantData.id, sessionData.id],
             });
-
-            participantsData.push(participantData);
           })(p)
         );
       }
@@ -134,64 +110,130 @@ export const createSession = functions.https.onRequest(
       // Wait for all participants to be added
       await Promise.all(participantsPromises);
 
-      response
-        .status(200)
-        .json({
-          SessionDatetime: sessionData.datetime,
-          SessionName: sessionData.name,
-          SessionUID: sessionData.uid,
-        })
-        .end();
+      // Send the emails
+      for (const participant of requestData.Participants) {
+        emailParticipantAdded(
+          participant.ParticipantEmail,
+          participant.ParticipantName,
+          requestData.HostName,
+          uniqueSessionID,
+          requestData.SessionName
+        );
+      }
+
+      return {
+        SessionDatetime: sessionData.datetime,
+        SessionName: sessionData.name,
+        SessionUID: sessionData.uid,
+      };
     });
   }
 );
 
-export const getAllSessions = functions.https.onRequest(
-  async (request, response) => {
-    const callerData = await authUser(request);
+export const getAllSessions = functions.https.onCall(async (data, context) => {
+  const responseData = [];
+  console.log(1);
+  const sessionData = await db.any({
+    text:
+      'SELECT sessions.*, extract(epoch from datetime) as Datetime FROM sessions LEFT JOIN Hosts host ON sessions.hostid=host.id WHERE host.firebaseUID=$1',
+    values: [context.auth!.uid],
+  });
 
-    const responseData = [];
-    console.log(1);
-    const sessionData = await db.any({
+  for (const session of sessionData) {
+    const totalParticipants = (
+      await db.one({
+        text:
+          'SELECT COUNT(*) as count FROM participantSessions WHERE SessionID=$1',
+        values: [session.id],
+      })
+    ).count;
+
+    const respondedParticipants = (
+      await db.one({
+        text:
+          'SELECT COUNT(DISTINCT sourceparticipantid) as count FROM rankings WHERE sessionid=$1',
+        values: [session.id],
+      })
+    ).count;
+
+    responseData.push({
+      TotalParticipants: totalParticipants,
+      RespondedParticipants: respondedParticipants,
+      SessionName: session.name,
+      SessionDatetime: session.datetime,
+      SessionUID: session.uid,
+      SessionStatus: session.status, // TODO: Implement status
+    });
+  }
+
+  return responseData;
+});
+
+export const solveSession = functions.https.onCall(
+  async (requestData: api.SolveSessionRequest, context) => {
+    const sessionData = await db.one({
+      text: 'SELECT id, groupSize, name FROM sessions WHERE uid=$1',
+      values: [requestData.SessionUID],
+    });
+
+    const rawRankings = await db.any({
+      text: 'SELECT * FROM rankings WHERE rankings.sessionID=$1',
+      values: [sessionData.id],
+    });
+
+    const participants = await db.any({
       text:
-        'SELECT sessions.*, extract(epoch from datetime) as Datetime FROM sessions LEFT JOIN Hosts host ON sessions.hostid=host.id WHERE host.firebaseUID=$1',
-      values: [callerData.uid],
+        'SELECT participants.* FROM participantSessions ' +
+        'LEFT JOIN participants ON participants.id=participantSessions.participantid ' +
+        'WHERE participantSessions.sessionid=$1',
+      values: [sessionData.id],
     });
 
-    for (const session of sessionData) {
-      const totalParticipants = (
-        await db.one({
-          text:
-            'SELECT COUNT(*) as count FROM participantSessions WHERE SessionID=$1',
-          values: [session.id],
-        })
-      ).count;
+    const solver = new Solver(
+      rawRankings,
+      participants,
+      parseInt(sessionData.groupsize)
+    );
+    const groups = solver.solve();
 
-      responseData.push({
-        TotalParticipants: totalParticipants,
-        RespondedParticipants: 0, // TODO: Implement this
-        SessionName: session.name,
-        SessionDatetime: session.datetime,
-        SessionUID: session.uid,
-        SessionStatus: session.status, // TODO: Implement status
+    return await db.tx(async (t) => {
+      // Delete any existing groups
+      await t.none({
+        text: 'DELETE FROM Groups WHERE SessionID=$1',
+        values: [sessionData.id],
       });
-    }
 
-    response.status(200).json(responseData).end();
+      for (const group of groups) {
+        const groupID = (
+          await t.one({
+            text: 'INSERT INTO Groups (SessionID) VALUES ($1) RETURNING id',
+            values: [sessionData.id],
+          })
+        ).id;
+
+        for (const participant of group) {
+          await t.none({
+            text:
+              'INSERT INTO ParticipantGroups (SessionID, ParticipantID, GroupID) VALUES ($1, $2, $3)',
+            values: [sessionData.id, participant.id, groupID],
+          });
+
+          emailParticipantGrouped(
+            participant.email,
+            participant.name,
+            sessionData.name,
+            group.map((p) => p.name)
+          );
+        }
+      }
+
+      return { SessionStatus: 'SOLVED' }; // TODO: Use enums
+    });
   }
 );
 
-export const solveSession = functions.https.onRequest(
-  async (request, response) => {}
-);
-
-export const getSession = functions.https.onRequest(
-  async (request, response) => {
-    const requestData: GetSessionRequest = <GetSessionRequest>(
-      (<unknown>request.query)
-    );
-    const callerData = await authUser(request);
-
+export const getSession = functions.https.onCall(
+  async (requestData: api.GetSessionRequest, context) => {
     const sessionData = await db.one({
       text:
         'SELECT sessions.*, extract(epoch from datetime) as Datetime, hosts.firebaseuid as hostuid ' +
@@ -199,9 +241,9 @@ export const getSession = functions.https.onRequest(
       values: [requestData.SessionUID],
     });
     console.log(sessionData.hostuid);
-    console.log(callerData.uid);
+    console.log(context.auth!.uid);
 
-    if (sessionData.hostuid !== callerData.uid) {
+    if (sessionData.hostuid !== context.auth!.uid) {
       throw new Error('You are not authorized to access this resource!');
     }
 
@@ -209,6 +251,14 @@ export const getSession = functions.https.onRequest(
       await db.one({
         text:
           'SELECT COUNT(*) as count FROM participantSessions WHERE SessionID=$1',
+        values: [sessionData.id],
+      })
+    ).count;
+
+    const respondedParticipants = (
+      await db.one({
+        text:
+          'SELECT COUNT(DISTINCT sourceparticipantid) as count FROM rankings WHERE sessionid=$1',
         values: [sessionData.id],
       })
     ).count;
@@ -224,29 +274,43 @@ export const getSession = functions.https.onRequest(
       return { ParticipantName: value.participantname }; // Need to do this to get the uppercase the name
     });
 
-    response
-      .status(200)
-      .json({
-        TotalParticipants: totalParticipants,
-        RespondedParticipants: 0, // TODO: Implement this
-        SessionName: sessionData.name,
-        SessionDatetime: sessionData.datetime,
-        SessionUID: sessionData.uid,
-        SessionStatus: sessionData.status, // TODO: Implement status
-        Participants: participantsList,
-        ParticipantsGroups: null, // TODO: Implement this
-      })
-      .end();
+    const groupIDs = await db.any({
+      text: 'SELECT * FROM Groups WHERE SessionID=$1',
+      values: [sessionData.id],
+    });
+
+    const groups = [];
+    for (const group of groupIDs) {
+      const participants = await db.any({
+        text:
+          'SELECT participants.name as name FROM participantgroups ' +
+          'LEFT JOIN participants ON participantgroups.participantid=participants.id ' +
+          'WHERE participantgroups.groupid=$1',
+        values: [group.id],
+      });
+
+      const participantsNames = participants.map((p) => {
+        return { ParticipantName: p.name };
+      });
+
+      groups.push(participantsNames);
+    }
+
+    return {
+      TotalParticipants: totalParticipants,
+      RespondedParticipants: respondedParticipants,
+      SessionName: sessionData.name,
+      SessionDatetime: sessionData.datetime,
+      SessionUID: sessionData.uid,
+      SessionStatus: sessionData.status, // TODO: Implement status
+      Participants: participantsList,
+      ParticipantsGroups: groups,
+    };
   }
 );
 
-export const getSessionParticipants = functions.https.onRequest(
-  async (request, response) => {
-    const requestData: GetSessionParticipantRequest = <GetSessionRequest>(
-      (<unknown>request.query)
-    );
-    await authUser(request);
-
+export const getSessionParticipants = functions.https.onCall(
+  async (requestData: api.GetSessionParticipantRequest, context) => {
     const sessionParticipants = (
       await db.any({
         text:
@@ -260,28 +324,23 @@ export const getSessionParticipants = functions.https.onRequest(
       return { ParticipantName: value.name, ParticipantID: value.id };
     });
 
-    response.status(200).json({ Participants: sessionParticipants }).end();
+    return { Participants: sessionParticipants };
   }
 );
 
-export const setParticipantFirebaseUID = functions.https.onRequest(
-  async (request, response) => {
-    const callerData = await authUser(request);
-
+export const setParticipantFirebaseUID = functions.https.onCall(
+  async (data, context) => {
     await db.none({
       text: 'UPDATE participants SET firebaseuid=$1 WHERE email=$2',
-      values: [callerData.uid, callerData.email],
+      values: [context.auth!.uid, context.auth!.token.email],
     });
 
-    response.status(200).end();
+    return {};
   }
 );
 
-export const updateParticipantPreferences = functions.https.onRequest(
-  async (request, response) => {
-    const requestData: api.UpdateParticipantPreferencesRequest = request.body;
-    const callerData = await authUser(request);
-    console.log(requestData.SessionUID);
+export const updateParticipantPreferences = functions.https.onCall(
+  async (requestData: api.UpdateParticipantPreferencesRequest, context) => {
     const sessionID = (
       await db.one({
         text: 'SELECT id FROM sessions WHERE uid=$1',
@@ -299,7 +358,7 @@ export const updateParticipantPreferences = functions.https.onRequest(
             'SELECT COUNT(*) as count FROM participantSessions ' +
             'LEFT JOIN participants ON participants.id=participantSessions.participantID ' +
             'WHERE participants.firebaseuid=$1 AND sessionID=$2',
-          values: [callerData.uid, sessionID],
+          values: [context.auth!.uid, sessionID],
         })
       ).count;
       if (isInSession === 0) {
@@ -309,23 +368,20 @@ export const updateParticipantPreferences = functions.https.onRequest(
       throw new Error('You are not in this session.');
     }
 
-    await db.tx(async (t) => {
-      console.log(0);
+    return await db.tx(async (t) => {
       const callerID = (
         await t.one({
           text: 'SELECT id FROM participants WHERE firebaseuid=$1',
-          values: [callerData.uid],
+          values: [context.auth!.uid],
         })
       ).id;
 
-      console.log(0);
       // Clear any existing preferences
       await t.none({
         text: 'DELETE FROM rankings WHERE sourceParticipantID=$1',
         values: [callerID],
       });
 
-      console.log(0);
       for (const participant of requestData.DreamParticipants) {
         console.log(requestData.DreamParticipants);
         console.log(participant);
@@ -336,7 +392,6 @@ export const updateParticipantPreferences = functions.https.onRequest(
         });
       }
 
-      console.log(0);
       for (const participant of requestData.NightmareParticipants) {
         console.log(participant);
         await t.none({
@@ -346,7 +401,7 @@ export const updateParticipantPreferences = functions.https.onRequest(
         });
       }
 
-      response.status(200).end();
+      return {};
     });
   }
 );
