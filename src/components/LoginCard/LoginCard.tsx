@@ -39,6 +39,5 @@ export const LoginCard = () => (
         Continue
       </Button>
     </Form>
-    <button type='button'>Email Auth Button</button>
   </div>
 );
