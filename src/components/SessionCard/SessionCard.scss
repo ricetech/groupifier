@@ -4,6 +4,12 @@
     #ffffff 0%,
     rgba(255, 255, 255, 0) 100%
   );
+  border: 2px solid;
+  border-image-source: radial-gradient(
+    91.16% 91.16% at 3.68% 6.69%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
   border-radius: 10px;
   width: 20em;
   height: 10em;
