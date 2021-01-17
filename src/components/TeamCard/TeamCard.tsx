@@ -30,7 +30,7 @@ export const TeamCard: React.FC<TeamCardProps> = ({
   return (
     <div className='team-card'>
       <Row>
-        <img src='' />
+        <img src='' alt='' />
         <h1 className='team-title'>Build Your</h1>
         <p className='team-option'>{teamCardOption}</p>
       </Row>
