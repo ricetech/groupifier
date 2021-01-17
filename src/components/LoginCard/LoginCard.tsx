@@ -52,8 +52,7 @@ export const LoginCard = () => {
       })
       .catch((error) => {
         setShowFail(true);
-        const errorCode = error.code;
-        const errorMsg = error.message;
+        console.log(error);
         // Send failed. Show code & message to user, also in a tooltip
       });
   };
