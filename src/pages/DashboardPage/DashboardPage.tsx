@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -22,6 +22,8 @@ export const DashboardPage = () => {
   const history = useHistory();
   const match = useRouteMatch();
 
+  const [sessions, setSessions] = useState([]);
+
   useEffect(() => {
     if (auth.isSignInWithEmailLink(window.location.href)) {
       let email = window.localStorage.getItem('emailForSignIn');
@@ -44,16 +46,17 @@ export const DashboardPage = () => {
           alert(error);
           auth.signOut().finally(() => history.push('/'));
         });
-    }
 
-    const getAllSessions = functions.httpsCallable('getAllSessions');
-    getAllSessions()
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+      const getAllSessions = functions.httpsCallable('getAllSessions');
+      getAllSessions()
+        .then((result) => {
+          // console.log(result.data);
+          setSessions(result.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
   }, []);
 
   return (
@@ -70,7 +73,7 @@ export const DashboardPage = () => {
                 <CreateSessionPage />
               </Route>
               <Route path={`${match.path}/`}>
-                <CurrentSessionsPage />
+                <CurrentSessionsPage sessions={sessions} />
               </Route>
             </Switch>
           </Router>
