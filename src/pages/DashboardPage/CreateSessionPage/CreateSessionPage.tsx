@@ -66,7 +66,7 @@ export const CreateSessionPage = () => {
           onChange={handleChangeName}
         />
         <input type='file' name='file' onChange={handleChangeData} />
-        <input type="submit" value="Submit" />
+        <input type='submit' value='Submit' />
       </form>
     </div>
   );
