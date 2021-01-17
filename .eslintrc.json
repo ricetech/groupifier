@@ -72,6 +72,7 @@
     "react/jsx-one-expression-per-line": "off",
     "react/jsx-wrap-multilines": "off",
     "react/destructuring-assignment": "off",
+    "no-console": "off",
     "@typescript-eslint/comma-dangle": [
       "error",
       {
