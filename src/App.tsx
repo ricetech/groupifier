@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { HomePage } from './pages/HomePage/HomePage';
 import { DashboardPage } from './pages/DashboardPage/DashboardPage';
 import { GroupPage } from './pages/GroupPage/GroupPage';
+import { SessionPage } from './pages/SessionPage/SessionPage';
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
           </Route>
           <Route path='/group'>
             <GroupPage />
+          </Route>
+          <Route path='/session'>
+            <SessionPage />
           </Route>
           <Route path='/'>
             <HomePage />

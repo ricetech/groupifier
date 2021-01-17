@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -10,26 +10,32 @@ export const CreateSessionPage = () => {
     { partipantEmail: '', participantName: '' },
   ]);
 
+  useEffect(() => {
+    console.log(sessionData);
+  }, [sessionData]);
+
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSessionName(event.target.value);
   };
 
-  const handleChangeData = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeData = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (event.target.files) {
-      Papa.parse(event.target.files[0], {
+      // eslint-disable-next-line
+      let newData: any[] = [];
+      await Papa.parse(event.target.files[0], {
         complete: (results) => {
-          console.log(results.data);
           if (results.data) {
-            setSessionData(
-              results.data.map((row) => {
-                // eslint-disable-next-line
-                const row2 = row as any[];
-                return {
-                  partipantEmail: row2[0],
-                  participantName: row2[1],
-                };
-              })
-            );
+            newData = results.data.map((row) => {
+              // eslint-disable-next-line
+              const row2 = row as any[];
+              return {
+                partipantEmail: row2[0],
+                participantName: row2[1],
+              };
+            });
+            setSessionData(newData);
           }
         },
       });
