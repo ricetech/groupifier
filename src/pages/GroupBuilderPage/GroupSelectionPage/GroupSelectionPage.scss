@@ -1,14 +1,16 @@
-.button-success {
+.team-card-container {
+  display: flex;
+  flex-direction: row;
+  margin: 2em 0 0 0;
+}
+
+.button-submit-group {
   background: #ae8ae0;
   border-radius: 8.51064px;
   border: none;
   padding: 0.5em 1em;
-  position: absolute;
-  width: 158px;
-  height: 35px;
-  left: 1200px;
-  top: 630px;
 
   font-family: Poppins;
   color: #ffffff;
+  margin: 0 0 0 2em;
 }

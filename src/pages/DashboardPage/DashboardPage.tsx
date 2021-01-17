@@ -9,16 +9,53 @@ import {
   Link,
   useRouteMatch,
   useParams,
+  useHistory,
 } from 'react-router-dom';
 
 import { Sidebar } from '../../components/Sidebar/Sidebar';
 import { CurrentSessionsPage } from './CurrentSessionsPage/CurrentSessionsPage';
 import { CreateSessionPage } from './CreateSessionPage/CreateSessionPage';
 
-import { auth } from '../../firebase';
+import { auth, functions } from '../../firebase';
 
 export const DashboardPage = () => {
+  const history = useHistory();
   const match = useRouteMatch();
+
+  useEffect(() => {
+    if (auth.isSignInWithEmailLink(window.location.href)) {
+      let email = window.localStorage.getItem('emailForSignIn');
+      if (!email) {
+        email = window.prompt(
+          'Please provide your email to complete the sign-in process.'
+        );
+      }
+
+      if (!email) {
+        email = '';
+      }
+
+      auth
+        .signInWithEmailLink(email, window.location.href)
+        .then((result) => {
+          window.localStorage.removeItem('emailForSignIn');
+        })
+        .catch((error) => {
+          alert(error);
+          auth.signOut().finally(() => history.push('/'));
+        });
+    }
+
+    const getAllSessions = functions.httpsCallable('getAllSessions');
+    getAllSessions()
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
+
   return (
     <Row className='full-row'>
       <Col xs={2}>
