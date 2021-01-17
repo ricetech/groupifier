@@ -23,16 +23,19 @@ export const DashboardPage = () => {
         <Sidebar name='Bob' />
       </Col>
       <Col xs={10}>
-        <Router>
-          <Switch>
-            <Route path={`${match.path}/create`}>
-              <CreateSessionPage />
-            </Route>
-            <Route path={`${match.path}/`}>
-              <CurrentSessionsPage />
-            </Route>
-          </Switch>
-        </Router>
+        <Row className='groupifier-container'>groupifier</Row>
+        <Row>
+          <Router>
+            <Switch>
+              <Route path={`${match.path}/create`}>
+                <CreateSessionPage />
+              </Route>
+              <Route path={`${match.path}/`}>
+                <CurrentSessionsPage />
+              </Route>
+            </Switch>
+          </Router>
+        </Row>
       </Col>
     </Row>
   );
