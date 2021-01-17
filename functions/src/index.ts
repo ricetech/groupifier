@@ -77,16 +77,6 @@ function emailParticipantGrouped(
   });
 }
 
-export const testEmail = functions.https.onRequest((req, res) => {
-  emailParticipantAdded(
-    'CHANGEME!',
-    'Jonathan',
-    'David',
-    'askdlsajdlkj-jaskldjasldj',
-    'Birthday Party'
-  );
-});
-
 export const createSession = functions.https.onRequest(
   async (request, response) => {
     const requestData: api.CreateSessionRequest = request.body;
