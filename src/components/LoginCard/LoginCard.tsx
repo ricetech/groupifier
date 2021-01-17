@@ -1,4 +1,10 @@
 import React from 'react';
+import Form from 'react-bootstrap/Form';
+import FormGroup from 'react-bootstrap/FormGroup';
+import FormLabel from 'react-bootstrap/FormLabel';
+import FormControl from 'react-bootstrap/FormControl';
+import FormText from 'react-bootstrap/FormText';
+import Button from 'react-bootstrap/Button';
 
 export const LoginCard = () => (
   <div className='LoginCard'>
@@ -19,6 +25,20 @@ export const LoginCard = () => (
         instead.
       </b>
     </p>
+    <Form>
+      <FormGroup controlId='loginFormEmail'>
+        <FormLabel>Email Address</FormLabel>
+        <FormControl type='email' placeholder='Your email' />
+        <FormText className='text-muted'>
+          NOTE: Only for Hosts. Participants should use the link sent to their
+          email.
+        </FormText>
+      </FormGroup>
+
+      <Button variant='primary' type='submit'>
+        Continue
+      </Button>
+    </Form>
     <button type='button'>Email Auth Button</button>
   </div>
 );
