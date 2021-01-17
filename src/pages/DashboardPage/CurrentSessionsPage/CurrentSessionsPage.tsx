@@ -12,18 +12,24 @@ export const CurrentSessionsPage = () => {
   };
 
   return (
-    <div>
-      <Row>
+    <div className='current-session-body'>
+      <Row className='button-container'>
         <button type='button' className='create-button' onClick={handleClick}>
           Create new Session
         </button>
       </Row>
-      <Row>
+      <Row className='session-card-container'>
         <SessionCard
           sessionName='Bob'
           sessionDate='Jan 9th'
           currentParticipants={4}
           totalParticipants={5}
+        />
+        <SessionCard
+          sessionName='Bean'
+          sessionDate='Jan 12th'
+          currentParticipants={4}
+          totalParticipants={20}
         />
       </Row>
     </div>
