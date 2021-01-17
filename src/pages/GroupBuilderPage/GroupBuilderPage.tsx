@@ -43,9 +43,9 @@ export const GroupBuilderPage = () => {
         .then((result) => {
           window.localStorage.removeItem('emailForSignIn');
           history.replace(
-            `/group-builder?sid=${new URL(location.href).searchParams.get(
-              'sid'
-            )}`
+            `/group-builder?sid=${new URL(
+              window.location.href
+            ).searchParams.get('sid')}`
           );
           const setParticipantFirebaseUID = functions.httpsCallable(
             'setParticipantFirebaseUID'
