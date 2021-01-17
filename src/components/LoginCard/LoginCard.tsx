@@ -33,8 +33,8 @@ export const LoginCard = () => {
         // Show tooltip telling user to check their email
       })
       .catch((error) => {
-        let errorCode = error.code;
-        let errorMsg = error.message;
+        const errorCode = error.code;
+        const errorMsg = error.message;
         // Send failed. Show code & message to user, also in a tooltip
       });
   };

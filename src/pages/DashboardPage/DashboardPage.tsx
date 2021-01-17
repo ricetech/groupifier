@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -14,6 +14,8 @@ import {
 import { Sidebar } from '../../components/Sidebar/Sidebar';
 import { CurrentSessionsPage } from './CurrentSessionsPage/CurrentSessionsPage';
 import { CreateSessionPage } from './CreateSessionPage/CreateSessionPage';
+
+import { auth } from '../../firebase';
 
 export const DashboardPage = () => {
   const match = useRouteMatch();
