@@ -11,9 +11,8 @@ export const LoginCard = () => (
     <img src='' />
     <h1 className='Title'>groupifier</h1>
     <p className='AboutText'>
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-      Lorem Ipsum has been the industry's standard dummy text ever since the
-      1500s, when an unk
+      Groupifier is a web app that allows classrooms or teams to easily generate
+      the optimal group assignments.
     </p>
     <h2>Sign-up/sign-in as a Host</h2>
     <p className='SignInWarning'>

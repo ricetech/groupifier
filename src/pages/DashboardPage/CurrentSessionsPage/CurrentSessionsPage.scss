@@ -2,8 +2,23 @@
   background: #ae8ae0;
   border-radius: 8.51064px;
   border: none;
+  margin: 1em;
   padding: 0.5em 1em;
 
   font-family: Poppins;
   color: #ffffff;
+}
+
+.button-container {
+  padding: 3em 0 0 2em;
+}
+
+.session-card-container {
+  display: flex;
+  flex-flow: row wrap;
+  padding: 0 0 0 2em;
+}
+
+.current-session-body {
+  padding: 0 0 0 1em;
 }

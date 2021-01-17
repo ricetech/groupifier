@@ -14,9 +14,10 @@ export const SessionCard: React.FC<SessionCardProps> = ({
   totalParticipants,
 }) => (
   <div className='session-card'>
-    <img src='' />
-    <h1 className='session-name'> {sessionName}</h1>
-    <p className='session-date'>{sessionDate}</p>
+    <div className='session-card-header'>
+      <h1 className='session-name'> {sessionName}</h1>
+      <p className='session-date'>{sessionDate}</p>
+    </div>
     <p className='session-fraction'>
       {currentParticipants}/{totalParticipants}
     </p>
