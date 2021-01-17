@@ -74,8 +74,13 @@ export const createSession = functions.https.onCall(
       // Create the session
       const sessionData = await t.one({
         text:
-          'INSERT INTO sessions (UID, Name, HostID) VALUES ($1, $2, $3) RETURNING extract(epoch from datetime) as Datetime, name, uid, id',
-        values: [uniqueSessionID, requestData.SessionName, hostID],
+          'INSERT INTO sessions (UID, Name, HostID, GroupSize) VALUES ($1, $2, $3, $4) RETURNING extract(epoch from datetime) as Datetime, name, uid, id',
+        values: [
+          uniqueSessionID,
+          requestData.SessionName,
+          hostID,
+          requestData.GroupSize,
+        ],
       });
 
       // Store the newly created participants
@@ -153,16 +158,14 @@ export const getAllSessions = functions.https.onCall(async (data, context) => {
 
 export const solveSession = functions.https.onCall(
   async (requestData: api.SolveSessionRequest, context) => {
-    const sessionID = (
-      await db.one({
-        text: 'SELECT id FROM sessions WHERE uid=$1',
-        values: [requestData.SessionUID],
-      })
-    ).id;
+    const sessionData = await db.one({
+      text: 'SELECT id, groupSize FROM sessions WHERE uid=$1',
+      values: [requestData.SessionUID],
+    });
 
     const rawRankings = await db.any({
       text: 'SELECT * FROM rankings WHERE rankings.sessionID=$1',
-      values: [sessionID],
+      values: [sessionData.id],
     });
 
     const participants = await db.any({
@@ -170,10 +173,42 @@ export const solveSession = functions.https.onCall(
         'SELECT participants.* FROM participantSessions ' +
         'LEFT JOIN participants ON participants.id=participantSessions.participantid ' +
         'WHERE participantSessions.sessionid=$1',
-      values: [sessionID],
+      values: [sessionData.id],
     });
 
-    const solver = new Solver(rawRankings, participants);
+    const solver = new Solver(
+      rawRankings,
+      participants,
+      parseInt(sessionData.groupsize)
+    );
+    const groups = solver.solve();
+
+    return await db.tx(async (t) => {
+      // Delete any existing groups
+      await t.none({
+        text: 'DELETE FROM Groups WHERE SessionID=$1',
+        values: [sessionData.id],
+      });
+
+      for (const group of groups) {
+        const groupID = (
+          await t.one({
+            text: 'INSERT INTO Groups (SessionID) VALUES ($1) RETURNING id',
+            values: [sessionData.id],
+          })
+        ).id;
+
+        for (const participant of group) {
+          await t.none({
+            text:
+              'INSERT INTO ParticipantGroups (SessionID, ParticipantID, GroupID) VALUES ($1, $2, $3)',
+            values: [sessionData.id, participant.id, groupID],
+          });
+        }
+      }
+
+      return { SessionStatus: 'SOLVED' }; // TODO: Use enums
+    });
   }
 );
 

@@ -1,4 +1,5 @@
 export interface CreateSessionRequest {
+  GroupSize: number;
   HostName: string;
   SessionName: string;
   Participants: Array<{ ParticipantName: string; ParticipantEmail: string }>;

@@ -19,6 +19,7 @@ CREATE TABLE Sessions (
     UID VARCHAR(128) UNIQUE,
     Name VARCHAR(64),
     HostID INT,
+    GroupSize INT,
     Datetime TIMESTAMP NOT NULL DEFAULT NOW(),
     Status VARCHAR(20),
     PRIMARY KEY (ID),
@@ -30,6 +31,16 @@ CREATE TABLE Groups (
     SessionID INT,
     PRIMARY KEY (ID),
     FOREIGN KEY (SessionID) REFERENCES Sessions(ID)
+);
+
+CREATE TABLE ParticipantGroups (
+    SessionID INT,
+    ParticipantID INT,
+    GroupID INT,
+    PRIMARY KEY (SessionID, ParticipantID, GroupID),
+    FOREIGN KEY (SessionID) REFERENCES Sessions(ID),
+    FOREIGN KEY (ParticipantID) REFERENCES Participants(ID),
+    FOREIGN KEY (GroupID) REFERENCES Groups(ID) ON DELETE CASCADE
 );
 
 CREATE TABLE ParticipantSessions (
