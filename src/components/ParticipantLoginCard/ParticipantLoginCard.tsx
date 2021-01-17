@@ -73,7 +73,7 @@ export const ParticipantLoginCard = () => {
             onChange={handleChangeEmail}
           />
           <FormText className='text-muted'>
-            NOTE: Only for Participants. HOsts should use homepage.
+            NOTE: Only for Participants. Hosts should use homepage.
           </FormText>
         </FormGroup>
 
