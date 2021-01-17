@@ -36,7 +36,6 @@ function emailParticipantAdded(
   });
 }
 
-// @ts-ignore
 function emailParticipantGrouped(
   email: string,
   recipientName: string,
@@ -173,7 +172,7 @@ export const getAllSessions = functions.https.onCall(async (data, context) => {
 export const solveSession = functions.https.onCall(
   async (requestData: api.SolveSessionRequest, context) => {
     const sessionData = await db.one({
-      text: 'SELECT id, groupSize FROM sessions WHERE uid=$1',
+      text: 'SELECT id, groupSize, name FROM sessions WHERE uid=$1',
       values: [requestData.SessionUID],
     });
 
@@ -218,6 +217,13 @@ export const solveSession = functions.https.onCall(
               'INSERT INTO ParticipantGroups (SessionID, ParticipantID, GroupID) VALUES ($1, $2, $3)',
             values: [sessionData.id, participant.id, groupID],
           });
+
+          emailParticipantGrouped(
+            participant.email,
+            participant.name,
+            sessionData.name,
+            group.map((p) => p.name)
+          );
         }
       }
 
