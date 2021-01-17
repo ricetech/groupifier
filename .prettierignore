@@ -39,5 +39,4 @@ package-lock.json
 
 .gitignore
 .eslintrc.json
-/functions/.gitignore
-/functions/.eslintrc.js
+/functions/
