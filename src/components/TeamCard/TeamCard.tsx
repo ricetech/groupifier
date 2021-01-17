@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
+import Row from 'react-bootstrap/Row';
 import { Participant } from '../../interfaces';
 
 const name = [
@@ -14,14 +15,18 @@ interface TeamCardProps {
 
 export const TeamCard: React.FC<TeamCardProps> = ({ teamCardOption, data }) => (
   <div className='team-card'>
-    <img src='' />
-    <h1 className='team-title'>Build Your</h1>
-    <p className='team-option'>{teamCardOption}</p>
-    <Select
-      isMulti
-      className='basic-multi-select'
-      classNamePrefit='select'
-      options={data}
-    />
+    <Row>
+      <img src='' />
+      <h1 className='team-title'>Build Your</h1>
+      <p className='team-option'>{teamCardOption}</p>
+    </Row>
+    <Row>
+      <Select
+        isMulti
+        className='basic-multi-select'
+        classNamePrefit='select'
+        options={data}
+      />
+    </Row>
   </div>
 );

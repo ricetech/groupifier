@@ -1,8 +1,8 @@
 .team-card {
-  position: absolute;
-  width: 30em;
-  height: 30em;
-  padding: 2em;
+  width: 50%;
+  height: 25em;
+  padding: 3em;
+  margin: 1em;
 
   background: radial-gradient(
     89.93% 143.65% at 96.61% 93.63%,
@@ -24,8 +24,8 @@
   font-family: Poppins;
   font-style: italic;
   font-weight: 300;
-  font-size: 24px;
-  line-height: 36px;
+  font-size: 1.5em;
+  line-height: 0.1em;
   letter-spacing: 0.5em;
 
   color: #000000;
@@ -38,8 +38,7 @@
   font-family: Poppins;
   font-style: normal;
   font-weight: bold;
-  font-size: 48px;
-  line-height: 72px;
+  font-size: 2.5em;
 
   color: #000000;
 }
