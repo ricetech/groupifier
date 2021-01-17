@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col';
 export const GroupBuilderSuccessPage = () => (
   <Row className='full-row justify-content-md-center'>
     <Col xs={4} className='align-self-center'>
-      <h1> Success </h1>
+      <h1> An email of your group will be sent shortly</h1>
     </Col>
   </Row>
 );
