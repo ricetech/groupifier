@@ -144,9 +144,17 @@ export const getAllSessions = functions.https.onCall(async (data, context) => {
       })
     ).count;
 
+    const respondedParticipants = (
+      await db.one({
+        text:
+          'SELECT COUNT(*) as count FROM rankings WHERE SessionID=$1 GROUP BY SourceParticipantID',
+        values: [session.id],
+      })
+    ).count;
+
     responseData.push({
       TotalParticipants: totalParticipants,
-      RespondedParticipants: 0, // TODO: Implement this
+      RespondedParticipants: respondedParticipants,
       SessionName: session.name,
       SessionDatetime: session.datetime,
       SessionUID: session.uid,
@@ -236,6 +244,14 @@ export const getSession = functions.https.onCall(
       })
     ).count;
 
+    const respondedParticipants = (
+      await db.one({
+        text:
+          'SELECT COUNT(*) as count FROM rankings WHERE SessionID=$1 GROUP BY SourceParticipantID',
+        values: [sessionData.id],
+      })
+    ).count;
+
     const participantsList = (
       await db.any({
         text:
@@ -249,7 +265,7 @@ export const getSession = functions.https.onCall(
 
     return {
       TotalParticipants: totalParticipants,
-      RespondedParticipants: 0, // TODO: Implement this
+      RespondedParticipants: respondedParticipants,
       SessionName: sessionData.name,
       SessionDatetime: sessionData.datetime,
       SessionUID: sessionData.uid,
