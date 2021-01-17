@@ -44,8 +44,8 @@ export const CreateSessionPage = () => {
       });
     }
   };
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
     const createSession = functions.httpsCallable('createSession');
     createSession({ Participants: sessionData })
       .then((result) => {
