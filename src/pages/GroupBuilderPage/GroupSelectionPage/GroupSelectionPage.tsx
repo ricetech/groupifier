@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -21,6 +21,20 @@ const dummydata: Participant[] = [
 
 export const GroupSelectionPage = () => {
   const history = useHistory();
+
+  useEffect(() => {
+    const getSessionParticipants = functions.httpsCallable(
+      'getSessionParticipants'
+    );
+    getSessionParticipants()
+      .then((result) => {
+        const sanitizedMessage = result.data.text;
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
+
   const handleClick = () => {
     const updateParticipantPreferences = functions.httpsCallable(
       'updateParticipantPreferences'

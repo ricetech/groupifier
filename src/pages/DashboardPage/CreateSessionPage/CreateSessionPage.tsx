@@ -48,10 +48,11 @@ export const CreateSessionPage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const createSession = functions.httpsCallable('createSession');
-    createSession({ Participants: sessionData }).then((result) => {
-      // Read result of the Cloud Function.
-      const sanitizedMessage = result.data.text;
-    });
+    createSession({ Participants: sessionData })
+      .then((result) => {
+        const sanitizedMessage = result.data.text;
+      })
+      .catch((e) => console.log(e));
   };
 
   return (
