@@ -63,6 +63,7 @@
       }
     ],
     "react/jsx-props-no-spreading": "off",
+    "react/no-unused-state": "off",
     "import/prefer-default-export": "off",
     "react/jsx-boolean-value": "off",
     "react/prop-types": "off",

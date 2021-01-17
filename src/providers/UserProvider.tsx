@@ -9,18 +9,25 @@ interface State {
 export const UserContext = createContext<State>({ user: null });
 
 class UserProvider extends Component {
-  state: State = {
-    user: null,
-  };
+  userState: State;
+
+  constructor() {
+    super({});
+    this.userState = {
+      user: null,
+    };
+  }
 
   componentDidMount = () => {
     firebase.auth().onAuthStateChanged((userAuth) => {
+      // eslint-disable-next-line no-use-before-define
       this.setState({ user: userAuth });
     });
   };
+
   render() {
     return (
-      <UserContext.Provider value={this.state}>
+      <UserContext.Provider value={this.userState}>
         {' '}
         {this.props.children}{' '}
       </UserContext.Provider>
