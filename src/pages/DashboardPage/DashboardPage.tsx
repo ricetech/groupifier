@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import {
@@ -44,6 +43,7 @@ export const DashboardPage = () => {
         .signInWithEmailLink(email, window.location.href)
         .then((result) => {
           window.localStorage.removeItem('emailForSignIn');
+          history.replace('/dashboard');
           const getAllSessions = functions.httpsCallable('getAllSessions');
           getAllSessions()
             .then((sessionsResult) => {
