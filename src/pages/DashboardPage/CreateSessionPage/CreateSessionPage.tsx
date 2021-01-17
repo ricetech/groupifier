@@ -58,7 +58,7 @@ export const CreateSessionPage: React.FC<CreateSessionPageProps> = ({
       HostName: hostName,
       Participants: sessionData,
     })
-      .then((result) => {
+      .then(() => {
         history.push('/dashboard');
       })
       .catch((err) => alert(`Error. Please try again:\n${err}`));

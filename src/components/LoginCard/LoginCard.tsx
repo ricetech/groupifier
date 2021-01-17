@@ -28,15 +28,9 @@ export const LoginCard = () => {
   const handleClose = () => setShowSuccess(false);
   const handleCloseFail = () => setShowFail(false);
 
-  const handleShow = (event: React.FormEvent) => {
-    event.preventDefault();
-  };
-
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
-  const buttonRef = useRef();
-
   const handleContinueClick = (event: React.FormEvent) => {
     event.preventDefault();
     auth

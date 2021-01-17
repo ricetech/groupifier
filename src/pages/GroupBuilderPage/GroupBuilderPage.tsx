@@ -19,8 +19,6 @@ import { Sidebar } from '../../components/Sidebar/Sidebar';
 
 import { auth, functions } from '../../firebase';
 
-const dummydata: Participant[] = [{ value: 'Bob@email.com', label: 'Bob' }];
-
 export const GroupBuilderPage = () => {
   const history = useHistory();
   const match = useRouteMatch();
@@ -40,7 +38,7 @@ export const GroupBuilderPage = () => {
 
       auth
         .signInWithEmailLink(email, window.location.href)
-        .then((result) => {
+        .then(() => {
           window.localStorage.removeItem('emailForSignIn');
           history.replace(
             `/group-builder?sid=${new URL(
