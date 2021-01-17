@@ -83,9 +83,6 @@ export const createSession = functions.https.onCall(
         ],
       });
 
-      // Store the newly created participants
-      const participantsData: number[] = [];
-
       // Variable to hold pending promises. This way, we can add the participants more quickly.
       const participantsPromises = [];
 
@@ -107,8 +104,6 @@ export const createSession = functions.https.onCall(
                 'INSERT INTO ParticipantSessions (ParticipantID, SessionID) VALUES ($1, $2)',
               values: [participantData.id, sessionData.id],
             });
-
-            participantsData.push(participantData);
           })(p)
         );
       }
