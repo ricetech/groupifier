@@ -24,7 +24,18 @@ export const LoginCard = () => {
 
   const handleContinueClick = (event: React.FormEvent) => {
     event.preventDefault();
-    auth.sendSignInLinkToEmail(email, actionCodeSettings);
+    auth
+      .sendSignInLinkToEmail(email, actionCodeSettings)
+      .then(() => {
+        // Send successful!
+        // Disable button
+        // Show tooltip telling user to check their email
+      })
+      .catch((error) => {
+        let errorCode = error.code;
+        let errorMsg = error.message;
+        // Send failed. Show code & message to user, also in a tooltip
+      });
   };
 
   return (
