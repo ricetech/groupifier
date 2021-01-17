@@ -9,6 +9,7 @@ import {
   Link,
   useRouteMatch,
   useParams,
+  useHistory,
 } from 'react-router-dom';
 
 import { Sidebar } from '../../components/Sidebar/Sidebar';
@@ -18,6 +19,7 @@ import { CreateSessionPage } from './CreateSessionPage/CreateSessionPage';
 import { auth, functions } from '../../firebase';
 
 export const DashboardPage = () => {
+  const history = useHistory();
   const match = useRouteMatch();
 
   useEffect(() => {
@@ -40,6 +42,7 @@ export const DashboardPage = () => {
         })
         .catch((error) => {
           alert(error);
+          auth.signOut().finally(() => history.push('/'));
         });
     }
 
