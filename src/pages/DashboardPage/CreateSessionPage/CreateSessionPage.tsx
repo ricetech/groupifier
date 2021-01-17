@@ -123,19 +123,6 @@ export const CreateSessionPage = () => {
 
   return (
     <div className='form-card'>
-<<<<<<< HEAD
-      <form onSubmit={handleSubmit}>
-        <input
-          type='text'
-          value={sessionName}
-          name='name'
-          placeholder='Session Name'
-          onChange={handleChangeName}
-        />
-        <input type='file' name='file' onChange={handleChangeData} />
-        <input type='submit' value='Submit' />
-      </form>
-=======
       <Form onSubmit={handleSubmit}>
         <Form.Group>
           <Form.Control
@@ -155,7 +142,6 @@ export const CreateSessionPage = () => {
           Submit
         </Button>
       </Form>
->>>>>>> e544ae996d0c9c001f024d43dc379b8de453d21d
     </div>
   );
 };
