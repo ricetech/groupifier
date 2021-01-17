@@ -6,11 +6,25 @@ import FormControl from 'react-bootstrap/FormControl';
 import FormText from 'react-bootstrap/FormText';
 import Button from 'react-bootstrap/Button';
 
+import { auth } from '../../firebase';
+
+const actionCodeSettings = {
+  // URL you want to redirect back to. The domain (www.example.com) for this
+  // URL must be in the authorized domains list in the Firebase Console.
+  url: 'https://groupifier.space/dashboard',
+  handleCodeInApp: true,
+};
+
 export const LoginCard = () => {
   const [email, setEmail] = useState('');
 
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
+  };
+
+  const handleContinueClick = (event: React.FormEvent) => {
+    event.preventDefault();
+    auth.sendSignInLinkToEmail(email, actionCodeSettings);
   };
 
   return (
@@ -46,7 +60,7 @@ export const LoginCard = () => {
           </FormText>
         </FormGroup>
 
-        <Button variant='primary' type='submit'>
+        <Button variant='primary' type='submit' onClick={handleContinueClick}>
           Continue
         </Button>
       </Form>
