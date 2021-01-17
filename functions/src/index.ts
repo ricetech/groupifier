@@ -147,7 +147,7 @@ export const getAllSessions = functions.https.onCall(async (data, context) => {
     const respondedParticipants = (
       await db.one({
         text:
-          'SELECT COUNT(*) as count FROM rankings WHERE SessionID=$1 GROUP BY SourceParticipantID',
+          'SELECT COUNT(DISTINCT sourceparticipantid) as count FROM rankings WHERE sessionid=$1',
         values: [session.id],
       })
     ).count;
@@ -247,7 +247,7 @@ export const getSession = functions.https.onCall(
     const respondedParticipants = (
       await db.one({
         text:
-          'SELECT COUNT(*) as count FROM rankings WHERE SessionID=$1 GROUP BY SourceParticipantID',
+          'SELECT COUNT(DISTINCT sourceparticipantid) as count FROM rankings WHERE sessionid=$1',
         values: [sessionData.id],
       })
     ).count;
