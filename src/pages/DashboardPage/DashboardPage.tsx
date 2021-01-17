@@ -19,6 +19,31 @@ import { auth } from '../../firebase';
 
 export const DashboardPage = () => {
   const match = useRouteMatch();
+
+  useEffect(() => {
+    if (auth.isSignInWithEmailLink(window.location.href)) {
+      let email = window.localStorage.getItem('emailForSignIn');
+      if (!email) {
+        email = window.prompt(
+          'Please provide your email to complete the sign-in process.'
+        );
+      }
+
+      if (!email) {
+        email = '';
+      }
+
+      auth
+        .signInWithEmailLink(email, window.location.href)
+        .then((result) => {
+          window.localStorage.removeItem('emailForSignIn');
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    }
+  }, []);
+
   return (
     <Row className='full-row'>
       <Col xs={2}>
