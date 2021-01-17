@@ -6,6 +6,7 @@ import { config, smtpConfig } from './databasesecret';
 import * as nodemailer from 'nodemailer';
 import { v4 as uuid } from 'uuid';
 import * as api from './interfaces/api';
+import { Solver } from './solver';
 
 admin.initializeApp();
 
@@ -150,7 +151,31 @@ export const getAllSessions = functions.https.onCall(async (data, context) => {
   return responseData;
 });
 
-export const solveSession = functions.https.onCall(async (data, context) => {});
+export const solveSession = functions.https.onCall(
+  async (requestData: api.SolveSessionRequest, context) => {
+    const sessionID = (
+      await db.one({
+        text: 'SELECT id FROM sessions WHERE uid=$1',
+        values: [requestData.SessionUID],
+      })
+    ).id;
+
+    const rawRankings = await db.any({
+      text: 'SELECT * FROM rankings WHERE rankings.sessionID=$1',
+      values: [sessionID],
+    });
+
+    const participants = await db.any({
+      text:
+        'SELECT participants.* FROM participantSessions ' +
+        'LEFT JOIN participants ON participants.id=participantSessions.participantid ' +
+        'WHERE participantSessions.sessionid=$1',
+      values: [sessionID],
+    });
+
+    const solver = new Solver(rawRankings, participants);
+  }
+);
 
 export const getSession = functions.https.onCall(
   async (requestData: api.GetSessionRequest, context) => {

@@ -17,3 +17,7 @@ export interface UpdateParticipantPreferencesRequest {
   DreamParticipants: number[];
   NightmareParticipants: number[];
 }
+
+export interface SolveSessionRequest {
+  SessionUID: string;
+}
