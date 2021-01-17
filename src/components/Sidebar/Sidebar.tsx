@@ -8,8 +8,7 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ name }) => (
   <div className='sidebar'>
     <div className='sidebar-profile'>
-      <div className='default-pfp' />
-      <span className='username '>{name}</span>
+      <div className='default-pfp'>{name}</div>
     </div>
   </div>
 );

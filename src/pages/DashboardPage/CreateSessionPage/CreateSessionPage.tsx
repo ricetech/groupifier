@@ -8,7 +8,13 @@ import Papa from 'papaparse';
 import axios from 'axios';
 import { functions } from '../../../firebase';
 
-export const CreateSessionPage = () => {
+interface CreateSessionPageProps {
+  hostName: String;
+}
+
+export const CreateSessionPage: React.FC<CreateSessionPageProps> = ({
+  hostName,
+}) => {
   const [sessionName, setSessionName] = useState('');
   const [sessionData, setSessionData] = useState([
     { partipantEmail: '', participantName: '' },
@@ -48,11 +54,15 @@ export const CreateSessionPage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const createSession = functions.httpsCallable('createSession');
-    createSession({ Participants: sessionData })
+    createSession({
+      SessionName: sessionName,
+      HostName: hostName,
+      Participants: sessionData,
+    })
       .then((result) => {
         const sanitizedMessage = result.data.text;
       })
-      .catch((e) => console.log(e));
+      .catch((err) => console.log(err));
   };
 
   return (

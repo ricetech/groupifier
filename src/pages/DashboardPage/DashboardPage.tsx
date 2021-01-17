@@ -23,6 +23,7 @@ export const DashboardPage = () => {
   const match = useRouteMatch();
 
   const [sessions, setSessions] = useState([]);
+  const [emailName, setEmailName] = useState('');
 
   useEffect(() => {
     if (auth.isSignInWithEmailLink(window.location.href)) {
@@ -36,6 +37,8 @@ export const DashboardPage = () => {
       if (!email) {
         email = '';
       }
+
+      setEmailName(email);
 
       auth
         .signInWithEmailLink(email, window.location.href)
@@ -61,7 +64,7 @@ export const DashboardPage = () => {
   return (
     <Row className='full-row'>
       <Col xs={2}>
-        <Sidebar name='Bob' />
+        <Sidebar name={emailName[0]} />
       </Col>
       <Col xs={10}>
         <Row className='groupifier-container'>groupifier</Row>
@@ -69,7 +72,7 @@ export const DashboardPage = () => {
           <Router>
             <Switch>
               <Route path={`${match.path}/create`}>
-                <CreateSessionPage />
+                <CreateSessionPage hostName={emailName} />
               </Route>
               <Route path={`${match.path}/`}>
                 <CurrentSessionsPage sessions={sessions} />

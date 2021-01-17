@@ -27,7 +27,7 @@ export const CurrentSessionsPage: React.FC<CurrentSessionsPageProps> = ({
     <SessionCard
       key={session.SessionUID}
       sessionName={session.SessionName}
-      sessionDate={session.SessionDatetime}
+      sessionDate={new Date(1000 * session.SessionDatetime).toDateString()}
       currentParticipants={session.RespondedParticipants}
       totalParticipants={session.TotalParticipants}
     />
