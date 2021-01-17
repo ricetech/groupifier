@@ -38,8 +38,8 @@ export const CreateSessionPage: React.FC<CreateSessionPageProps> = ({
               // eslint-disable-next-line
               const row2 = row as any[];
               return {
-                ParticipantEmail: row2[0],
-                ParticipantName: row2[1],
+                ParticipantEmail: row2[1],
+                ParticipantName: row2[0],
               };
             });
             setSessionData(newData);
@@ -58,6 +58,7 @@ export const CreateSessionPage: React.FC<CreateSessionPageProps> = ({
     })
       .then((result) => {
         const sanitizedMessage = result.data.text;
+        console.log(sanitizedMessage);
       })
       .catch((err) => console.log(err));
   };
