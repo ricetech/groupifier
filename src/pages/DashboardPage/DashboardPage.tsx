@@ -41,6 +41,7 @@ export const DashboardPage = () => {
         .signInWithEmailLink(email, window.location.href)
         .then((result) => {
           window.localStorage.removeItem('emailForSignIn');
+          history.replace('/dashboard');
         })
         .catch((error) => {
           alert(error);
