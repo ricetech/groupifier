@@ -28,7 +28,7 @@
   
 - solveSession: (POST)
   - **Request**:
-    - SessionsUID: String
+    - SessionUID: String
   - **Response**:
     - SessionStatus: String
   
