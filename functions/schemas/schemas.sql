@@ -44,7 +44,7 @@ CREATE TABLE Rankings (
     SessionID INT,
     SourceParticipantID INT,
     TargetParticipantID INT,
-    RANK SMALLINT,
+    Rank SMALLINT,
     PRIMARY KEY (SessionID, SourceParticipantID, TargetParticipantID),
     FOREIGN KEY (SourceParticipantID) REFERENCES Participants(ID),
     FOREIGN KEY (TargetParticipantID) REFERENCES Participants(ID)
