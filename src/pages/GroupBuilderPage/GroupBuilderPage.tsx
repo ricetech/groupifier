@@ -15,7 +15,6 @@ import { GroupSelectionPage } from './GroupSelectionPage/GroupSelectionPage';
 
 import { Participant } from '../../interfaces';
 
-
 import { Sidebar } from '../../components/Sidebar/Sidebar';
 
 const dummydata: Participant[] = [{ value: 'Bob@email.com', label: 'Bob' }];

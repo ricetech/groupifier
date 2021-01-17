@@ -28,3 +28,10 @@
   font-size: 0.7em;
   color: #5f5f5f;
 }
+div.fade.in.modal {
+  display: flex !important;
+}
+
+.modal-dialog {
+  margin: auto;
+}
