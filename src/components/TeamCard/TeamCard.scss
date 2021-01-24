@@ -1,0 +1,48 @@
+.team-card {
+  width: 50%;
+  height: 25em;
+  padding: 3em;
+  margin: 1em;
+
+  background: radial-gradient(
+    89.93% 143.65% at 96.61% 93.63%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border-radius: 10px;
+  border: 2px solid;
+  border-image-source: radial-gradient(
+    100% 149.36% at 2.29% 0%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+.team-title {
+  position: relative;
+  float: left;
+
+  font-family: Poppins;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.5em;
+  // line-height: 0.1em;
+  // letter-spacing: 0.5em;
+
+  color: #000000;
+}
+
+.team-option {
+  position: relative;
+  float: left;
+
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 2.5em;
+
+  color: #000000;
+}
+.basic-multi-select {
+  position: relative;
+  width: 100%;
+}

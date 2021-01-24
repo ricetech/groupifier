@@ -1,0 +1,56 @@
+.ParticipantLoginCard {
+  background: radial-gradient(
+    101.46% 100.93% at 102.57% 101.71%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.570607) 33.6%,
+    rgba(255, 255, 255, 0) 97.51%
+  );
+  border-radius: 32px;
+
+  border: 2px solid;
+  border-image-source: radial-gradient(
+    91.16% 91.16% at 3.68% 6.69%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+
+  padding: 4em;
+}
+
+.Title {
+  font-family: Poppins;
+  font-weight: 700;
+  font-size: 2em;
+  color: #7e71b7;
+}
+
+.AboutText {
+  font-family: 'Open Sans';
+  font-size: 0.7em;
+  color: #5f5f5f;
+}
+
+.logo {
+  height: 2em;
+  width: 2em;
+  margin-bottom: 1em;
+}
+
+div.fade.in.modal {
+  display: flex !important;
+}
+
+.modal-dialog {
+  margin: auto;
+}
+
+.continue-button {
+  background: #ae8ae0;
+  border-radius: 8.51064px;
+  border: none;
+  margin: 0 0 1em 1em;
+  padding: 0.5em 1em;
+
+  font-family: Poppins;
+  color: #ffffff;
+}
