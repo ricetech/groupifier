@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Card, Button } from 'react-bootstrap';
 import { functions } from '../../firebase';
 
 interface SessionCardProps {
@@ -30,17 +31,23 @@ export const SessionCard: React.FC<SessionCardProps> = ({
   };
 
   return (
-    <div className='session-card'>
-      <div className='session-card-header'>
+    <Card className='session-card'>
+      <Card.Header className='session-card-header'>
         <h1 className={isSolved ? 'solved-session-name' : 'session-name'}>
           {' '}
           {sessionName}
         </h1>
         <p className='session-date'>{sessionDate}</p>
-      </div>
-      <button className='session-fraction' type='button' onClick={handleClick}>
-        {currentParticipants}/{totalParticipants}
-      </button>
-    </div>
+      </Card.Header>
+      <Card.Body>
+        <Button
+          variant='secondary'
+          className='session-fraction'
+          onClick={handleClick}
+        >
+          {currentParticipants}/{totalParticipants}
+        </Button>
+      </Card.Body>
+    </Card>
   );
 };

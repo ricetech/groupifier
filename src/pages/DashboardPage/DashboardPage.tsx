@@ -12,17 +12,28 @@ import {
 import { Sidebar } from '../../components/Sidebar/Sidebar';
 import { CurrentSessionsPage } from './CurrentSessionsPage/CurrentSessionsPage';
 import { CreateSessionPage } from './CreateSessionPage/CreateSessionPage';
-
+import { Session } from '../../interfaces';
 import { auth, functions } from '../../firebase';
+
+// Used to allow us to view cards when developing frontend
+const mockSessions: Session[] = Array.from(Array(10).keys()).map((v, i) => ({
+  RespondedParticipants: '0',
+  SessionDatetime: 1610880953.15761,
+  SessionName: 'Test 3',
+  SessionStatus: null,
+  SessionUID: i.toString(),
+  TotalParticipants: '15',
+}));
 
 export const DashboardPage = () => {
   const history = useHistory();
   const match = useRouteMatch();
 
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState<Session[]>([]);
   const [emailName, setEmailName] = useState('');
 
   useEffect(() => {
+    setSessions(mockSessions);
     if (auth.isSignInWithEmailLink(window.location.href)) {
       let email = window.localStorage.getItem('emailForSignIn');
       if (!email) {
@@ -45,7 +56,6 @@ export const DashboardPage = () => {
           const getAllSessions = functions.httpsCallable('getAllSessions');
           getAllSessions()
             .then((sessionsResult) => {
-              // console.log(result.data);
               setSessions(sessionsResult.data);
             })
             .catch((e) => {
