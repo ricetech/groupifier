@@ -1,6 +1,6 @@
 # This workflow builds and lints the website
 
-name: Website Build and Lint
+name: Website Lint
 
 on: [push]
 
@@ -17,5 +17,3 @@ jobs:
         run: npm ci
       - name: Linter
         run: npm run lint
-      - name: Build
-        run: npm run build
