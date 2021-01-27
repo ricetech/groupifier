@@ -5,7 +5,7 @@ name: Cloud Functions Build and Lint
 on: [push]
 
 jobs:
-  build:
+  functions_build_and_lint:
     runs-on: ubuntu-latest
     defaults:
       run:
