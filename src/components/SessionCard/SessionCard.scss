@@ -1,9 +1,5 @@
 .session-card {
-  background: radial-gradient(
-    109.5% 315.21% at 109.5% 110.9%,
-    #ffffff 0%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background: $glass;
   border: 2px solid;
   border-image-source: radial-gradient(
     91.16% 91.16% at 3.68% 6.69%,
