@@ -12,14 +12,15 @@ import {
 import { Sidebar } from '../../components/Sidebar/Sidebar';
 import { CurrentSessionsPage } from './CurrentSessionsPage/CurrentSessionsPage';
 import { CreateSessionPage } from './CreateSessionPage/CreateSessionPage';
-
+import { ISessionCard } from '../../interfaces';
+import { mockSessionData } from '../../mock/MockData';
 import { auth, functions } from '../../firebase';
 
 export const DashboardPage = () => {
   const history = useHistory();
   const match = useRouteMatch();
 
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState<ISessionCard[]>([]);
   const [emailName, setEmailName] = useState('');
 
   useEffect(() => {
