@@ -20,5 +20,5 @@ COPY --from=builder /usr/src/app/target/release/backend .
 # This default value facilitates local development.
 ENV PORT 8000
 
-# Run the web service on container startup.
-CMD ["./backend"]
+# Run the web service on container startup, telling Rocket to use $PORT
+CMD ROCKET_PORT=$PORT ./backend
