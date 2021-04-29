@@ -6,6 +6,8 @@ FROM rustlang/rust:nightly AS builder
 WORKDIR /usr/src/app
 COPY . .
 
+RUN apt update && apt install -y libpq-dev
+
 # Install production dependencies and build a release artifact.
 RUN cargo build --release
 
