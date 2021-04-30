@@ -1,0 +1,16 @@
+steps:
+- name: 'ubuntu'
+  entrypoint: bash
+  args: 
+  - -c
+  - ./outputToRocket.sh "$$DATABASE_CONNECTION"
+  secretEnv: ['DATABASE_CONNECTION']
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/groupifier-htn20/backend', '.' ]
+timeout: '1200s'
+images:
+- 'gcr.io/groupifier-htn20/backend'
+availableSecrets:
+  secretManager:
+  - versionName: projects/826023010901/secrets/database_connection/versions/3
+    env: DATABASE_CONNECTION

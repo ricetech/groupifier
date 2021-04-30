@@ -17,6 +17,9 @@ FROM rustlang/rust:nightly-slim
 # Copy the compiled executable over to this image
 WORKDIR /root/
 COPY --from=builder /usr/src/app/target/release/backend .
+COPY --from=builder /usr/src/app/Rocket.toml .
+
+RUN apt update && apt install -y libpq5
 
 # Service must listen to $PORT environment variable.
 # This default value facilitates local development.
