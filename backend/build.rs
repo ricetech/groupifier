@@ -1,5 +1,5 @@
-use std::process::Command;
 use std::env;
+use std::process::Command;
 
 // Compile and link the go library to access the Firebase API
 fn main() {

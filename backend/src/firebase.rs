@@ -24,16 +24,16 @@ impl fmt::Display for FirebaseError<'_> {
 
 unsafe fn convert_to_str<'a>(char_ptr: *const c_char) -> Result<&'a str, Utf8Error> {
     let c_str = CStr::from_ptr(char_ptr);
-    return c_str.to_str();
+    c_str.to_str()
 }
 
-pub fn initialize_firebase<'a>() -> Result<(), Box<dyn Error>> {
+pub fn initialize_firebase() -> Result<(), Box<dyn Error>> {
     let status_ptr = unsafe { initialize() };
     let status = unsafe { convert_to_str(status_ptr) };
 
     match status {
         Err(e) => Err(Box::new(e)),
         Ok("") => Ok(()),
-        Ok(e) => Err(Box::new(FirebaseError{message: e})),
+        Ok(e) => Err(Box::new(FirebaseError { message: e })),
     }
 }

@@ -19,8 +19,12 @@ fn index() -> &'static str {
 
 fn main() {
     match firebase::initialize_firebase() {
-        Ok(_) => { println!("Successfully initialized Firebase API") }
-        Err(e) => { panic!("Could not initialize Firebase API: {}", e.to_string()) }
+        Ok(_) => {
+            println!("Successfully initialized Firebase API")
+        }
+        Err(e) => {
+            panic!("Could not initialize Firebase API: {}", e.to_string())
+        }
     }
 
     rocket::ignite()
