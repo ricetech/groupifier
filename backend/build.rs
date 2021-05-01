@@ -22,7 +22,7 @@ fn main() {
     // Statically link it to the rust project
     let lib = "firebase";
 
-    println!("cargo:rerun-if-changed=./firebaseConnector/firebaseConnector.go");
+    println!("cargo:rerun-if-changed=./firebaseConnector/");
     println!("cargo:rustc-link-search=native={}", out_dir);
     println!("cargo:rustc-link-lib=static={}", lib);
 }
