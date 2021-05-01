@@ -1,0 +1,21 @@
+name: CI Rust Backend
+
+on: [push, pull_request]
+
+jobs:
+  cargo_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: sudo apt-get install -y libpq-dev
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          override: true
+          toolchain: nightly
+      - name: Cargo Check
+        working-directory: ./backend
+        run: cargo check
