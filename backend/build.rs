@@ -16,7 +16,10 @@ fn main() {
 
     // Fail the build if the Go library didn't compile
     if !go_output.status.success() {
-        panic!("Go Firebase library failed to compile: {}", String::from_utf8_lossy(&go_output.stderr))
+        panic!(
+            "Go Firebase library failed to compile: {}",
+            String::from_utf8_lossy(&go_output.stderr)
+        )
     }
 
     // Statically link it to the rust project

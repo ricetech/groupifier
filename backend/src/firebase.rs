@@ -28,13 +28,12 @@ unsafe fn convert_to_str<'a>(char_ptr: *const c_char) -> Result<String, Utf8Erro
 }
 
 pub fn initialize_firebase() -> Result<(), Box<dyn Error>> {
-
     let status_ptr = unsafe { initialize() };
     let status = unsafe { convert_to_str(status_ptr) };
 
     match status {
         Err(e) => Err(Box::new(e)),
-        Ok(s) if s  == "" => Ok(()),
+        Ok(s) if s == "" => Ok(()),
         Ok(e) => Err(Box::new(FirebaseError { message: e })),
     }
 }
