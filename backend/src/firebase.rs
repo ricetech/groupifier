@@ -2,8 +2,6 @@ use std::error::Error;
 use std::ffi::CStr;
 use std::fmt;
 use std::fmt::Formatter;
-use std::os::raw::c_char;
-use std::str::Utf8Error;
 
 mod firebase_library {
     use std::os::raw::c_char;
@@ -27,14 +25,21 @@ impl fmt::Display for FirebaseError {
     }
 }
 
-unsafe fn convert_to_str(char_ptr: *const c_char) -> Result<String, Utf8Error> {
-    let c_str = CStr::from_ptr(char_ptr);
-    c_str.to_str().map(String::from)
-}
-
 pub fn initialize() -> Result<(), Box<dyn Error>> {
-    let status_ptr = unsafe { firebase_library::initialize() };
-    let status = unsafe { convert_to_str(status_ptr) };
+    let status;
+
+    // Call the Go function (exposed as a C library) initialize()
+    // The function returns a pointer to a C string representing the status. This pointer should not
+    // be null because there is no path in the Go code where such thing happens. This C string is
+    // immediately converted to a Rust string and the pointer of the C string is manually freed.
+    unsafe {
+        let status_ptr = firebase_library::initialize();
+
+        // Convert the above pointer to a proper Rust String
+        status = CStr::from_ptr(status_ptr).to_str().map(String::from);
+        // Free the passed pointer
+        libc::free(status_ptr as *mut libc::c_void);
+    }
 
     match status {
         Ok(s) if s.is_empty() => Ok(()),
