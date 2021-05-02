@@ -18,7 +18,7 @@ fn index() -> &'static str {
 }
 
 fn main() {
-    match firebase::initialize_firebase() {
+    match firebase::initialize() {
         Ok(_) => {
             println!("Successfully initialized Firebase API")
         }

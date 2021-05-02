@@ -5,8 +5,13 @@ use std::fmt::Formatter;
 use std::os::raw::c_char;
 use std::str::Utf8Error;
 
-extern "C" {
-    fn initialize() -> *const c_char;
+mod firebase_library {
+    use std::os::raw::c_char;
+
+    #[link(name = "firebase")]
+    extern "C" {
+        pub fn initialize() -> *const c_char;
+    }
 }
 
 #[derive(Debug)]
@@ -27,8 +32,8 @@ unsafe fn convert_to_str(char_ptr: *const c_char) -> Result<String, Utf8Error> {
     c_str.to_str().map(String::from)
 }
 
-pub fn initialize_firebase() -> Result<(), Box<dyn Error>> {
-    let status_ptr = unsafe { initialize() };
+pub fn initialize() -> Result<(), Box<dyn Error>> {
+    let status_ptr = unsafe { firebase_library::initialize() };
     let status = unsafe { convert_to_str(status_ptr) };
 
     match status {
