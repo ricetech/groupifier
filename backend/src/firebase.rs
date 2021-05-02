@@ -10,30 +10,31 @@ extern "C" {
 }
 
 #[derive(Debug)]
-pub struct FirebaseError<'a> {
-    message: &'a str,
+pub struct FirebaseError {
+    message: String,
 }
 
-impl Error for FirebaseError<'_> {}
+impl Error for FirebaseError {}
 
-impl fmt::Display for FirebaseError<'_> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+impl fmt::Display for FirebaseError {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "{}", self.message)
     }
 }
 
-unsafe fn convert_to_str<'a>(char_ptr: *const c_char) -> Result<&'a str, Utf8Error> {
+unsafe fn convert_to_str<'a>(char_ptr: *const c_char) -> Result<String, Utf8Error> {
     let c_str = CStr::from_ptr(char_ptr);
-    c_str.to_str()
+    c_str.to_str().and_then(|s| Ok(String::from(s)))
 }
 
 pub fn initialize_firebase() -> Result<(), Box<dyn Error>> {
+
     let status_ptr = unsafe { initialize() };
     let status = unsafe { convert_to_str(status_ptr) };
 
     match status {
         Err(e) => Err(Box::new(e)),
-        Ok("") => Ok(()),
+        Ok(s) if s  == "" => Ok(()),
         Ok(e) => Err(Box::new(FirebaseError { message: e })),
     }
 }
